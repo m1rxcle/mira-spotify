@@ -46,13 +46,13 @@ const HomePage = () => {
 				</div>
 			</div>
 			<div className="flex flex-col gap-10 mb-10">
-				<h2 className="text-5xl font-bold ">New Albums</h2>
+				<h2 className="text-4xl font-bold ">New Albums</h2>
 				<AlbumsSection albums={albums} isLoading={isLoading} />
-				<h2 className="text-5xl font-bold ">Trends</h2>
+				<h2 className="text-4xl font-bold ">Trends</h2>
 				<TrendingSongsSection trendingSongs={trendingSongs} isLoading={isLoading} />
-				<h2 className="text-5xl font-bold ">Featured</h2>
+				<h2 className="text-4xl font-bold ">Featured</h2>
 				<FeaturesSongsSection featuredSongs={featuredSongs} isLoading={isLoading} />
-				<h2 className="text-5xl font-bold ">Made For you</h2>
+				<h2 className="text-4xl font-bold ">Made For you</h2>
 				<MadeForYouSongsSection madeForYouSongs={madeForYouSongs} isLoading={isLoading} />
 			</div>
 		</section>
