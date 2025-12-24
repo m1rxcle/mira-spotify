@@ -13,8 +13,15 @@ import {
 } from "@remixicon/react"
 import MusicPlayerSkeleton from "../skeletons/music-player-skeleton"
 import { usePlayerStore } from "@/store/use-player-store"
+import ChangeVolumeBlock from "./change-volume-block"
+import { useRef, useState } from "react"
+import { useClickAway } from "@reactuses/core"
 
 const MusicPlayer = () => {
+	const [openVolume, setOpenVolume] = useState(false)
+	const volumeRef = useRef<HTMLDivElement>(null)
+	useClickAway(volumeRef, () => setOpenVolume(false))
+
 	const { isLoading } = useMusicStore()
 	const { currentSong, isPlaying, changeColors, timeLeft, togglePlay, playNextSong, playPreviousSong } = usePlayerStore()
 
@@ -100,11 +107,13 @@ const MusicPlayer = () => {
 						<RiDislikeLine size={25} />
 					</div>
 				</div>
-				<div className="flex gap-8 items-center">
-					<div className="hover:text-white transition-colors ease-in-out duration-300">
-						<RiVolumeDownLine size={25} />
+				<div ref={volumeRef} className="flex gap-8 items-center hover:text-white transition-colors ease-in-out duration-300 relative">
+					<RiVolumeDownLine onClick={() => setOpenVolume(!openVolume)} size={25} />
+					<div className="absolute -top-45 -left-2">
+						<ChangeVolumeBlock isOpenVolume={openVolume} />
 					</div>
 				</div>
+
 				<div
 					style={{
 						width: `${progress}%`,

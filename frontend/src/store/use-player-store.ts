@@ -5,12 +5,20 @@ import { create } from "zustand"
 
 type PlayerStore = {
 	currentSong: Song | null
+
 	isPlaying: boolean
+
 	queue: Song[]
+
 	currentIndex: number
+
 	timeLeft: number
 	// Меняем цвет плеера
 	changeColors: string
+
+	volume: number[]
+
+	setChangeVolume: (volume: number[]) => void
 
 	setTimeLeft: (time: number) => void
 
@@ -23,12 +31,17 @@ type PlayerStore = {
 }
 
 export const usePlayerStore = create<PlayerStore>()((set, get) => ({
+	volume: [0.5],
 	changeColors: COLORS[0],
 	timeLeft: 0,
 	currentSong: null,
 	currentIndex: -1,
 	isPlaying: false,
 	queue: [],
+
+	setChangeVolume: (volume: number[]) => {
+		set({ volume: volume })
+	},
 
 	setTimeLeft: (time: number) => {
 		set({ timeLeft: time })

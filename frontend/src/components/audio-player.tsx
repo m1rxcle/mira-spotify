@@ -5,7 +5,7 @@ const AudioPlayer = () => {
 	const audioRef = React.useRef<HTMLAudioElement>(null)
 	const prevSongRef = React.useRef<string | null>(null)
 
-	const { currentSong, isPlaying, setTimeLeft, playNextSong } = usePlayerStore()
+	const { currentSong, isPlaying, volume, setChangeVolume, setTimeLeft, playNextSong } = usePlayerStore()
 
 	useEffect(() => {
 		if (isPlaying) audioRef.current?.play()
@@ -30,7 +30,7 @@ const AudioPlayer = () => {
 
 		const isSongChange = prevSongRef.current !== currentSong?.audioUrl
 		if (isSongChange) {
-			audio.src = currentSong?.audioUrl
+			audio.src = currentSong.audioUrl
 			audio.currentTime = 0
 			prevSongRef.current = currentSong?.audioUrl
 
@@ -52,6 +52,22 @@ const AudioPlayer = () => {
 		audio.addEventListener("timeupdate", handleTimeUpdate)
 		return () => audio.removeEventListener("timeupdate", handleTimeUpdate)
 	}, [setTimeLeft])
+
+	useEffect(() => {
+		if (!audioRef.current) return
+		const audio = audioRef.current
+
+		audio.volume = volume[0]
+
+		const handleVolumeUpdate = () => {
+			const vol = audio.volume
+			setChangeVolume([vol])
+		}
+
+		audio.addEventListener("volumechange", handleVolumeUpdate)
+
+		return () => audio.removeEventListener("volumechange", handleVolumeUpdate)
+	}, [setChangeVolume, volume])
 
 	return <audio ref={audioRef} />
 }
