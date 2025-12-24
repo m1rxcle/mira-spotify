@@ -12,7 +12,7 @@ const ChangeSizeSideBar = () => {
 		<div
 			onClick={changeSizeHandler}
 			className="hidden absolute top-3 
-					 opacity-60 rounded-lg -right-6 group-hover:block
+					 opacity-60 rounded-lg -right-6 lg:group-hover:block
 					 bg-gray-500/30 w-8 h-8 
 					 hover:opacity-100 hover:cursor-pointer"
 		>

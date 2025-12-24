@@ -6,25 +6,25 @@ import TrendingSongsSection from "@/components/songs/trending-songs-section"
 import { useMusicStore } from "@/store/use-music-store"
 import { RiPauseLargeFill, RiPlayFill } from "@remixicon/react"
 import { useEffect } from "react"
+import { usePlayerStore } from "@/store/use-player-store"
 
 const HomePage = () => {
 	const {
-		isPlayButtonClicked,
 		trendingSongs,
 		madeForYouSongs,
 		featuredSongs,
 		isLoading,
 		albums,
-		setIsPlayButtonClicked,
 		setFetchTrendingSongs,
 		setFetchMadeForYouSongs,
 		setFetchFeaturedSongs,
 		setFetchAlbums,
 	} = useMusicStore()
+	const { isPlaying, togglePlay } = usePlayerStore()
 
 	const handlePlayMusic = () => {
 		// Logic to play music
-		setIsPlayButtonClicked(!isPlayButtonClicked)
+		togglePlay()
 	}
 
 	useEffect(() => {
@@ -39,7 +39,7 @@ const HomePage = () => {
 			<div className="h-[70%] relative flex justify-start items-center gap-20">
 				<div className="flex flex-col items-center justify-between  mx-auto text-center ">
 					<div className="flex justify-center  items-start cursor-pointer hover:scale-110" onClick={handlePlayMusic}>
-						{isPlayButtonClicked ? <RiPauseLargeFill className="size-14 font-bold" /> : <RiPlayFill className="size-14 font-bold" />}
+						{isPlaying ? <RiPauseLargeFill className="size-14 font-bold" /> : <RiPlayFill className="size-14 font-bold" />}
 						<h1 className="text-5xl font-extrabold">My music</h1>
 					</div>
 					<HomeCircleBackground />

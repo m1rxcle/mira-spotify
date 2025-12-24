@@ -4,10 +4,10 @@ import type { Album, Song } from "@/types"
 import { create } from "zustand"
 
 type MusicStore = {
-	currentSong: Song | null
-
 	trendingSongs: Song[]
+
 	madeForYouSongs: Song[]
+
 	featuredSongs: Song[]
 	// Список всех альбомов
 	albums: Album[]
@@ -17,12 +17,9 @@ type MusicStore = {
 	isLoading: boolean
 	// Свернутый sidebar или нет
 	collapsed: boolean
-	// Меняем цвет плеера
-	changeColors: string
+
 	// Меняем иконку стрелки sidebar
 	changeArrow: boolean
-	// Меняем иконку на плеере и главной странице
-	isPlayButtonClicked: boolean
 
 	setFetchTrendingSongs: () => Promise<void>
 	setFetchMadeForYouSongs: () => Promise<void>
@@ -30,13 +27,11 @@ type MusicStore = {
 	setFetchAlbums: () => Promise<void>
 	setFetchAlbumById: (albumId: string) => Promise<void>
 	setChangeArrow: (arrow: boolean) => void
-	setChangeColors: (color: string) => void
+
 	setCollapsed: (collapsed: boolean) => void
-	setIsPlayButtonClicked: (isPlayButtonClicked: boolean) => void
 }
 
 export const useMusicStore = create<MusicStore>()((set) => ({
-	currentSong: null,
 	madeForYouSongs: [],
 	featuredSongs: [],
 	trendingSongs: [],
@@ -46,7 +41,6 @@ export const useMusicStore = create<MusicStore>()((set) => ({
 	collapsed: false,
 	changeColors: COLORS[0],
 	changeArrow: false,
-	isPlayButtonClicked: false,
 
 	setFetchMadeForYouSongs: async () => {
 		set({ isLoading: true })
@@ -107,8 +101,6 @@ export const useMusicStore = create<MusicStore>()((set) => ({
 		}
 	},
 
-	setChangeColors: (color: string) => set(() => ({ changeColors: color })),
 	setCollapsed: (collapsed: boolean) => set(() => ({ collapsed })),
 	setChangeArrow: (arrow: boolean) => set(() => ({ changeArrow: arrow })),
-	setIsPlayButtonClicked: (isPlayButtonClicked: boolean) => set(() => ({ isPlayButtonClicked })),
 }))

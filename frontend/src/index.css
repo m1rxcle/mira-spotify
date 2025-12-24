@@ -256,3 +256,7 @@
 	animation: blurForThirdCircle 2.5s ease-in-out infinite;
 	backdrop-filter: blur(50px);
 }
+
+.smooth-progress {
+	transition: width 0.7s linear;
+}

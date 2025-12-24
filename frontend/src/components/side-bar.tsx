@@ -42,7 +42,7 @@ const SideBar = () => {
 			{/*  Desktop sidebar */}
 			<aside
 				className={cn(
-					collapsed ? "w-24" : "lg:w-56",
+					collapsed ? "w-24" : "md:w-24 lg:w-56",
 					`hidden md:flex md:flex-col md:items-center md:py-8 md:px-4 md:justify-between md:h-screen md:bg-black md:backdrop-blur-md md:z-10 transition-all duration-300 ease-in-out`
 				)}
 			>
@@ -100,8 +100,8 @@ const SideBar = () => {
 							to={"/admin"}
 							className="flex  items-center justify-center border-2 border-zinc-800 p-4 rounded-2xl hover:border-emerald-500 hover:text-emerald-500 transition-colors ease-in-out duration-300"
 						>
-							<LayoutDashboardIcon className={collapsed ? "size-4 mr-2 translate-x-1" : "size-4 mr-2"} />
-							<span className={collapsed ? "hidden" : "lg:block "}>Admin Dashboard</span>
+							<LayoutDashboardIcon className={collapsed ? "size-4 mr-2 translate-x-1" : "size-4 lg:mr-2"} />
+							<span className={collapsed ? "hidden" : "md:hidden md:translate-x-1 lg:block "}>Admin Dashboard</span>
 						</Link>
 					)}
 				</div>
@@ -126,7 +126,7 @@ const SideBar = () => {
 			</aside>
 
 			{/*  Mobile sidebar */}
-			<aside className="md:hidden sticky bottom-0 w-full h-10 bg-black mt-6">
+			<aside className="md:hidden sticky bottom-4 w-full h-10 bg-black mt-6">
 				<div className="px-4 flex items-center gap-4 justify-between">
 					<NavLink to="/" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
 						<div className="flex gap-2 ">
@@ -136,7 +136,7 @@ const SideBar = () => {
 							</div>
 						</div>
 					</NavLink>
-					<NavLink to="/" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
+					<NavLink to="/search" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
 						<div className="flex gap-2 ">
 							<RiSearch2Line />
 							<div id="nav-text" className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300">
@@ -144,7 +144,7 @@ const SideBar = () => {
 							</div>
 						</div>
 					</NavLink>
-					<NavLink to="/" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
+					<NavLink to="/library" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
 						<div className="flex gap-2 ">
 							<RiHeart2Line />
 							<div id="nav-text" className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300">
@@ -152,7 +152,7 @@ const SideBar = () => {
 							</div>
 						</div>
 					</NavLink>
-					<NavLink to="/" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
+					<NavLink to="/profile" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
 						<div className="flex gap-2 ">
 							<RiUser6Line />
 							<div id="nav-text" className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300">
