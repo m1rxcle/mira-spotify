@@ -1,10 +1,16 @@
+import React from "react"
 import { Skeleton } from "../ui/skeleton"
+import { cn } from "@/lib/utils"
 
-const TrendingSongsSkeleton = () => {
+interface Props {
+	className?: string
+}
+
+export const SearchSkeleton: React.FC<Props> = ({ className }) => {
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-			{Array.from({ length: 8 }).map((_, index) => (
-				<div key={index} className="flex justify-between items-center px-2 py-2 ">
+		<div className={cn("mt-20 w-full", className)}>
+			{Array.from({ length: 8 }).map(() => (
+				<div className="flex justify-between items-center px-2 py-2 ">
 					<div className="flex items-center gap-5">
 						<Skeleton className="w-12 h-12 rounded-md" />
 						<div className="flex flex-col justify-center gap-2 items-start">
@@ -26,5 +32,3 @@ const TrendingSongsSkeleton = () => {
 		</div>
 	)
 }
-
-export default TrendingSongsSkeleton

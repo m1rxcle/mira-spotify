@@ -1,8 +1,5 @@
 import CurrentAlbumSkeleton from "@/components/skeletons/current-album-skeleton"
-import AddToFavorite from "@/components/songs/add-to-favorite-button"
-import InteractiveHoverPlay from "@/components/songs/interactive-hover-play"
-import { formatDuration } from "@/lib/format-duration"
-import { cn } from "@/lib/utils"
+import RenderSongs from "@/components/songs/render-songs"
 import { useMusicStore } from "@/store/use-music-store"
 import { usePlayerStore } from "@/store/use-player-store"
 import { RiHeart2Line, RiPauseMiniFill, RiPlayMiniFill } from "@remixicon/react"
@@ -14,13 +11,11 @@ const AlbumPage = () => {
 	const { albumId } = useParams()
 
 	const { currentAlbum, isLoading, setFetchAlbumById } = useMusicStore()
-	const { currentSong, isPlaying, timeLeft, playAlbum, togglePlay } = usePlayerStore()
+	const { currentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore()
 
 	useEffect(() => {
 		setFetchAlbumById(albumId || "")
 	}, [setFetchAlbumById, albumId])
-
-	if (isLoading) return <CurrentAlbumSkeleton />
 
 	const handlePlayAlbumButton = () => {
 		if (!currentAlbum) return
@@ -31,14 +26,7 @@ const AlbumPage = () => {
 		}
 	}
 
-	const handlePlaySongInAlbum = (index: number) => {
-		if (!currentAlbum) return
-		if (isPlaying) {
-			togglePlay()
-		} else {
-			playAlbum(currentAlbum?.songs, index)
-		}
-	}
+	if (isLoading || !currentAlbum) return <CurrentAlbumSkeleton />
 
 	return (
 		<div className="h-full w-full ">
@@ -66,7 +54,7 @@ const AlbumPage = () => {
 									onClick={handlePlayAlbumButton}
 									className="bg-emerald-500 p-2 cursor-pointer rounded-full flex items-center justify-center hover:scale-110 transition-all ease-in-out duration-300"
 								>
-									{isPlaying && currentAlbum ? (
+									{currentAlbum && isPlaying ? (
 										<RiPauseMiniFill size={40} className="text-black transition-all ease-in-out duration-300" />
 									) : (
 										<RiPlayMiniFill size={40} className="text-black transition-all ease-in-out duration-300" />
@@ -76,34 +64,7 @@ const AlbumPage = () => {
 						</div>
 					</div>
 					<div className="w-full">
-						<ul className="space-y-2">
-							{currentAlbum?.songs?.map((song, index) => {
-								const isCurrentSong = currentSong?._id === song._id
-
-								return (
-									<div
-										onClick={() => handlePlaySongInAlbum(index)}
-										className={cn(
-											isCurrentSong ? "bg-zinc-800 transition-colors ease-in-out duration-300" : "",
-											"flex items-center justify-between gap-6 p-4 rounded-lg cursor-pointer hover:bg-zinc-800 transition-all ease-in-out duration-300 group"
-										)}
-										key={song._id}
-									>
-										<div className="flex items-center justify-start gap-4 relative">
-											<span className="text-gray-400 text-lg  group-hover:opacity-0">{index + 1}</span>
-
-											<InteractiveHoverPlay isPlayButtonClicked={isPlaying} pos="-translate-x-2" />
-											<li className="text-white font-semibold text-lg">{song.title}</li>
-										</div>
-										<div className="flex items-center gap-4">
-											<AddToFavorite />
-
-											<p className="text-gray-400 font-semibold">{isCurrentSong ? formatDuration(timeLeft) : formatDuration(song.duration)}</p>
-										</div>
-									</div>
-								)
-							})}
-						</ul>
+						<RenderSongs songs={currentAlbum.songs} className="flex flex-col" />
 					</div>
 				</div>
 			</div>

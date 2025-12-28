@@ -3,8 +3,6 @@ import { useMusicStore } from "@/store/use-music-store"
 import {
 	RiArrowGoBackLine,
 	RiArrowUpDownLine,
-	RiDislikeLine,
-	RiHeart3Line,
 	RiPauseMiniLine,
 	RiPlayFill,
 	RiSkipLeftLine,
@@ -16,6 +14,8 @@ import { usePlayerStore } from "@/store/use-player-store"
 import ChangeVolumeBlock from "./change-volume-block"
 import { useRef, useState } from "react"
 import { useClickAway } from "@reactuses/core"
+import { useUserStore } from "@/store/use-user-store"
+import AddToFavorite from "../songs/add-to-favorite-button"
 
 const MusicPlayer = () => {
 	const [openVolume, setOpenVolume] = useState(false)
@@ -23,6 +23,7 @@ const MusicPlayer = () => {
 	useClickAway(volumeRef, () => setOpenVolume(false))
 
 	const { isLoading } = useMusicStore()
+	const { featuredSongs, toggleFeaturedSongs } = useUserStore()
 	const { currentSong, isPlaying, changeColors, timeLeft, togglePlay, playNextSong, playPreviousSong } = usePlayerStore()
 
 	const backToPrevSong = () => {
@@ -38,7 +39,7 @@ const MusicPlayer = () => {
 	}
 
 	if (isLoading || !currentSong) {
-		return <MusicPlayerSkeleton handlePlayMusic={handlePlayMusic} isPlayButtonClicked={isPlaying} />
+		return <MusicPlayerSkeleton />
 	}
 
 	let progress = 0
@@ -51,6 +52,8 @@ const MusicPlayer = () => {
 	} else {
 		progress = Math.round(((currentSong.duration - timeLeft) / currentSong.duration) * 100)
 	}
+
+	const isFeatured = featuredSongs.some((featuredSong) => featuredSong._id === currentSong._id)
 
 	return (
 		<div
@@ -77,14 +80,21 @@ const MusicPlayer = () => {
 						alt={currentSong?.title}
 						className="w-12 h-12 md:w-16 md:h-16 rounded-md object-cover shadow-md shadow-black/50 "
 					/>
-					<div className="flex flex-col w-full justify-center items-start">
+					<div className="flex flex-col w-25 line-clamp-1 justify-center items-start">
 						<h3 className="text-white">{currentSong?.title}</h3>
 						<p className="text-gray-400">{currentSong?.artist}</p>
 					</div>
 				</div>
 				<div className="flex items-center gap-10 justify-between ">
 					<div className="hover:text-white transition-colors ease-in-out duration-300">
-						<RiHeart3Line size={25} />
+						<AddToFavorite
+							handleToggleFeatured={() => {
+								if (!currentSong) return
+								toggleFeaturedSongs(currentSong._id)
+							}}
+							isFeatured={isFeatured}
+							songId={currentSong?._id}
+						/>
 					</div>
 					<div className="flex items-center gap-4 justify-between">
 						<div className="hover:text-white transition-colors ease-in-out duration-300">
@@ -102,9 +112,6 @@ const MusicPlayer = () => {
 						<div className="hover:text-white transition-colors ease-in-out duration-300">
 							<RiArrowGoBackLine size={25} />
 						</div>
-					</div>
-					<div className="hover:text-white transition-colors ease-in-out duration-300">
-						<RiDislikeLine size={25} />
 					</div>
 				</div>
 				<div ref={volumeRef} className="flex gap-8 items-center hover:text-white transition-colors ease-in-out duration-300 relative">
@@ -134,7 +141,14 @@ const MusicPlayer = () => {
 				</div>
 				<div className="flex items-center gap-2">
 					<div className="hover:text-white transition-colors ease-in-out duration-300">
-						<RiHeart3Line size={30} className="text-gray-400 hover:text-white transition-colors ease-in-out duration-300 cursor-pointer" />
+						<AddToFavorite
+							handleToggleFeatured={() => {
+								if (!currentSong) return
+								toggleFeaturedSongs(currentSong._id)
+							}}
+							isFeatured={isFeatured}
+							songId={currentSong?._id}
+						/>
 					</div>
 					<div onClick={handlePlayMusic} className="cursor-pointer p-1.5 hover:scale-110  transition-all  ease-in-out duration-300">
 						{isPlaying ? (

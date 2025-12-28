@@ -46,7 +46,7 @@ const SideBar = () => {
 					`hidden md:flex md:flex-col md:items-center md:py-8 md:px-4 md:justify-between md:h-screen md:bg-black md:backdrop-blur-md md:z-10 transition-all duration-300 ease-in-out`
 				)}
 			>
-				<div className="flex flex-col gap-2 items-center w-full  group relative">
+				<div className="flex flex-col gap-2 items-center w-full group relative lg:mb-10">
 					<div className="w-full">
 						<Link to="/" className="flex flex-row justify-center gap-2 items-center">
 							<div className="w-12 h-12">
@@ -76,34 +76,36 @@ const SideBar = () => {
 					<ChangeSizeSideBar />
 				</div>
 
-				<div className="flex flex-col gap-10">
-					{NAV_ITEMS.map((item) => (
-						<NavLink key={item.href} to={item.href} className={({ isActive }) => (isActive ? "text-emerald-500" : "text-white/70")}>
-							<div className="flex gap-2 ">
-								<item.icon className="hover:text-emerald-500 transition-colors ease-in-out duration-700" />
-								<div
-									className={cn(
-										collapsed ? "opacity-0 scale-x-0 w-0 overflow-hidden" : "lg:opacity-100 lg:scale-100 lg:scale-x-100 lg:w-auto",
-										` hover:text-emerald-500 transition-colors ease-in-out duration-300  opacity-0 scale-0 scale-x-0 w-0`
-									)}
-								>
-									<span>{item.label}</span>
+				<div className="flex flex-col justify-between h-full items-center mb-10">
+					<div className="flex flex-col gap-10">
+						{NAV_ITEMS.map((item) => (
+							<NavLink key={item.href} to={item.href} className={({ isActive }) => (isActive ? "text-emerald-500" : "text-white/70")}>
+								<div className="flex gap-2 ">
+									<item.icon className="hover:text-emerald-500 transition-colors ease-in-out duration-700" />
+									<div
+										className={cn(
+											collapsed ? "opacity-0 scale-x-0 w-0 overflow-hidden" : "lg:opacity-100 lg:scale-100 lg:scale-x-100 lg:w-auto",
+											` hover:text-emerald-500 transition-colors ease-in-out duration-300  opacity-0 scale-0 scale-x-0 w-0`
+										)}
+									>
+										<span>{item.label}</span>
+									</div>
 								</div>
-							</div>
-						</NavLink>
-					))}
-				</div>
+							</NavLink>
+						))}
+					</div>
 
-				<div className="flex flex-col gap-4 items-center justify-center ">
-					{isAdmin && (
-						<Link
-							to={"/admin"}
-							className="flex  items-center justify-center border-2 border-zinc-800 p-4 rounded-2xl hover:border-emerald-500 hover:text-emerald-500 transition-colors ease-in-out duration-300"
-						>
-							<LayoutDashboardIcon className={collapsed ? "size-4 mr-2 translate-x-1" : "size-4 lg:mr-2"} />
-							<span className={collapsed ? "hidden" : "md:hidden md:translate-x-1 lg:block "}>Admin Dashboard</span>
-						</Link>
-					)}
+					<div className="flex flex-col gap-4 items-center justify-center ">
+						{isAdmin && (
+							<Link
+								to={"/admin"}
+								className="flex  items-center justify-center border-2 border-zinc-800 p-4 rounded-2xl hover:border-emerald-500 hover:text-emerald-500 transition-colors ease-in-out duration-300"
+							>
+								<LayoutDashboardIcon className={collapsed ? "size-4 mr-2 translate-x-1" : "size-4 lg:mr-2"} />
+								<span className={collapsed ? "hidden" : "md:hidden md:translate-x-1 lg:block "}>Admin Dashboard</span>
+							</Link>
+						)}
+					</div>
 				</div>
 
 				<div className="flex flex-col">
@@ -128,7 +130,7 @@ const SideBar = () => {
 			{/*  Mobile sidebar */}
 			<aside className="md:hidden sticky bottom-4 w-full h-10 bg-black mt-6">
 				<div className="px-4 flex items-center gap-4 justify-between">
-					<NavLink to="/" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
+					<NavLink to="/" className={({ isActive }) => (isActive ? "text-emerald-500" : "text-white/70")}>
 						<div className="flex gap-2 ">
 							<RiMusic2Line />
 							<div id="nav-text" className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300">
@@ -136,7 +138,7 @@ const SideBar = () => {
 							</div>
 						</div>
 					</NavLink>
-					<NavLink to="/search" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
+					<NavLink to="/search" className={({ isActive }) => (isActive ? "text-emerald-500" : "text-white/70")}>
 						<div className="flex gap-2 ">
 							<RiSearch2Line />
 							<div id="nav-text" className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300">
@@ -144,7 +146,7 @@ const SideBar = () => {
 							</div>
 						</div>
 					</NavLink>
-					<NavLink to="/library" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
+					<NavLink to="/library" className={({ isActive }) => (isActive ? "text-emerald-500" : "text-white/70")}>
 						<div className="flex gap-2 ">
 							<RiHeart2Line />
 							<div id="nav-text" className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300">
@@ -152,7 +154,7 @@ const SideBar = () => {
 							</div>
 						</div>
 					</NavLink>
-					<NavLink to="/profile" className={({ isActive }) => (isActive ? "text-white" : "text-white/70")}>
+					<NavLink to="/profile" className={({ isActive }) => (isActive ? "text-emerald-500" : "text-white/70")}>
 						<div className="flex gap-2 ">
 							<RiUser6Line />
 							<div id="nav-text" className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300">

@@ -8,7 +8,6 @@ type MusicStore = {
 
 	madeForYouSongs: Song[]
 
-	featuredSongs: Song[]
 	// Список всех альбомов
 	albums: Album[]
 	// Текущий альбом
@@ -23,7 +22,6 @@ type MusicStore = {
 
 	setFetchTrendingSongs: () => Promise<void>
 	setFetchMadeForYouSongs: () => Promise<void>
-	setFetchFeaturedSongs: () => Promise<void>
 	setFetchAlbums: () => Promise<void>
 	setFetchAlbumById: (albumId: string) => Promise<void>
 	setChangeArrow: (arrow: boolean) => void
@@ -33,7 +31,7 @@ type MusicStore = {
 
 export const useMusicStore = create<MusicStore>()((set) => ({
 	madeForYouSongs: [],
-	featuredSongs: [],
+
 	trendingSongs: [],
 	albums: [],
 	currentAlbum: null,
@@ -53,17 +51,7 @@ export const useMusicStore = create<MusicStore>()((set) => ({
 			set({ isLoading: false })
 		}
 	},
-	setFetchFeaturedSongs: async () => {
-		set({ isLoading: true })
-		try {
-			const response = await axiosInstance.get("/songs/featured")
-			set({ featuredSongs: response.data })
-		} catch (error) {
-			console.log("Error fetching songs", error)
-		} finally {
-			set({ isLoading: false })
-		}
-	},
+
 	setFetchTrendingSongs: async () => {
 		set({ isLoading: true })
 

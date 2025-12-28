@@ -24,6 +24,7 @@ type PlayerStore = {
 
 	initializeQueue: (songs: Song[]) => void
 	playAlbum: (songs: Song[], startIndex?: number) => void
+	handleSetCurrentSong: (song: Song) => void
 	setCurrentSong: (song: Song | null) => void
 	togglePlay: () => void
 	playNextSong: () => void
@@ -59,6 +60,9 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 			currentIndex: startIndex,
 			isPlaying: true,
 		})
+	},
+	handleSetCurrentSong: (song: Song) => {
+		set({ currentSong: song })
 	},
 	setCurrentSong: (song: Song | null) => {
 		if (!song) return

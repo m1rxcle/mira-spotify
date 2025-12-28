@@ -1,12 +1,12 @@
-import InteractiveHoverPlay from "./interactive-hover-play"
-import AddToFavorite from "./add-to-favorite-button"
 import type { Song } from "@/types"
-import { formatDuration } from "@/lib/format-duration"
-import { cn } from "@/lib/utils"
 import { usePlayerStore } from "@/store/use-player-store"
+import { SongTemplate } from "./song-template"
+import { cn } from "@/lib/utils"
+import { useUserStore } from "@/store/use-user-store"
 
-const RenderSongs = ({ songs }: { songs: Song[] }) => {
-	const { currentSong, isPlaying, togglePlay, playAlbum } = usePlayerStore()
+const RenderSongs = ({ songs, className }: { songs: Song[]; className?: string }) => {
+	const { currentSong, isPlaying, timeLeft, handleSetCurrentSong, togglePlay, playAlbum } = usePlayerStore()
+	const { featuredSongs, toggleFeaturedSongs } = useUserStore()
 
 	const handlePlaySongs = (index: number) => {
 		if (!songs) return
@@ -15,32 +15,23 @@ const RenderSongs = ({ songs }: { songs: Song[] }) => {
 	}
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+		<div className={cn("grid grid-cols-1 md:grid-cols-2 gap-4", className)}>
 			{songs.map((song, index) => {
 				const isCurrentSong = song._id === currentSong?._id
+				const isFeatured = featuredSongs.some((featuredSong) => featuredSong._id === song._id)
 				return (
-					<div
-						onClick={() => handlePlaySongs(index)}
+					<SongTemplate
+						timeLeft={timeLeft}
+						song={song}
 						key={song._id}
-						className={cn(
-							isCurrentSong && "bg-zinc-800",
-							`hover:bg-zinc-800 rounded-lg flex items-center justify-between gap-2 cursor-pointer p-2 pr-4 group`
-						)}
-					>
-						<div className="flex items-center gap-2">
-							<img loading="lazy" src={song.imageUrl} alt={song.title} className="w-12 h-12 rounded-md object-contain" />
-							<InteractiveHoverPlay isPlayButtonClicked={isPlaying} isCurrentSong={isCurrentSong} />
-							<div className="flex flex-col items-start justify-start">
-								<h3 className="text-base font-semibold">{song.title}</h3>
-								<p className="text-gray-400">{song.artist}</p>
-							</div>
-						</div>
-
-						<div className="flex gap-4 items-center">
-							<AddToFavorite />
-							<p className="text-gray-400 font-semibold">{formatDuration(song.duration)}</p>
-						</div>
-					</div>
+						index={index}
+						isCurrentSong={isCurrentSong}
+						isPlaying={isPlaying}
+						isFeatured={isFeatured}
+						toggleFeaturedSongs={toggleFeaturedSongs}
+						handlePlaySongs={handlePlaySongs}
+						handleSetCurrentSong={handleSetCurrentSong}
+					/>
 				)
 			})}
 		</div>

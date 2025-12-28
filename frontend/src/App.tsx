@@ -6,8 +6,12 @@ import AlbumPage from "./pages/album/album-page"
 import MusicPlayer from "./components/music-player/music-player"
 import AudioPlayer from "./components/audio-player"
 import HomePage from "./pages/home-page"
+import SearchPage from "./pages/search/search-page"
+import { FeaturesPage } from "./pages/library/features-page"
+import { useInitUseR } from "./hooks/use-init-user"
 
 function App() {
+	useInitUseR()
 	return (
 		<div className="h-screen flex md:flex-row flex-col-reverse">
 			<SideBar />
@@ -20,6 +24,8 @@ function App() {
 
 						<Route path="/" element={<HomePage />} />
 						<Route path="/album/:albumId" element={<AlbumPage />} />
+						<Route path="/search" element={<SearchPage />} />
+						<Route path="/library" element={<FeaturesPage />} />
 					</Routes>
 				</main>
 				<div>

@@ -7,20 +7,21 @@ import { useMusicStore } from "@/store/use-music-store"
 import { RiPauseLargeFill, RiPlayFill } from "@remixicon/react"
 import { useEffect } from "react"
 import { usePlayerStore } from "@/store/use-player-store"
+import { useUserStore } from "@/store/use-user-store"
 
 const HomePage = () => {
 	const {
 		trendingSongs,
 		madeForYouSongs,
-		featuredSongs,
 		isLoading,
 		albums,
 		setFetchTrendingSongs,
 		setFetchMadeForYouSongs,
-		setFetchFeaturedSongs,
+
 		setFetchAlbums,
 	} = useMusicStore()
 	const { isPlaying, togglePlay } = usePlayerStore()
+	const { token, getFeaturedSongs } = useUserStore()
 
 	const handlePlayMusic = () => {
 		// Logic to play music
@@ -28,11 +29,16 @@ const HomePage = () => {
 	}
 
 	useEffect(() => {
+		if (!token) return
+		getFeaturedSongs()
+	}, [token, getFeaturedSongs])
+
+	useEffect(() => {
 		setFetchTrendingSongs()
 		setFetchMadeForYouSongs()
-		setFetchFeaturedSongs()
+
 		setFetchAlbums()
-	}, [setFetchTrendingSongs, setFetchAlbums, setFetchFeaturedSongs, setFetchMadeForYouSongs])
+	}, [setFetchTrendingSongs, setFetchAlbums, getFeaturedSongs, setFetchMadeForYouSongs])
 
 	return (
 		<section className="h-full w-full px-6">
@@ -46,12 +52,11 @@ const HomePage = () => {
 				</div>
 			</div>
 			<div className="flex flex-col gap-10 mb-10">
+				<FeaturesSongsSection />
 				<h2 className="text-4xl font-bold ">New Albums</h2>
 				<AlbumsSection albums={albums} isLoading={isLoading} />
 				<h2 className="text-4xl font-bold ">Trends</h2>
 				<TrendingSongsSection trendingSongs={trendingSongs} isLoading={isLoading} />
-				<h2 className="text-4xl font-bold ">Featured</h2>
-				<FeaturesSongsSection featuredSongs={featuredSongs} isLoading={isLoading} />
 				<h2 className="text-4xl font-bold ">Made For you</h2>
 				<MadeForYouSongsSection madeForYouSongs={madeForYouSongs} isLoading={isLoading} />
 			</div>

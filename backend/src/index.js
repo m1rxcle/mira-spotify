@@ -13,6 +13,7 @@ import adminRoutes from "./routes/admin.route.js"
 import songRoutes from "./routes/song.route.js"
 import albumRoutes from "./routes/album.route.js"
 import statsRoutes from "./routes/stats.route.js"
+import searchRoutes from "./routes/search.route.js"
 
 dotenv.config()
 
@@ -44,6 +45,7 @@ app.use("/api/admin", adminRoutes)
 app.use("/api/songs", songRoutes)
 app.use("/api/albums", albumRoutes)
 app.use("/api/stats", statsRoutes)
+app.use("/api/search", searchRoutes)
 
 // Global error handler
 app.use((err, req, res, next) => {
