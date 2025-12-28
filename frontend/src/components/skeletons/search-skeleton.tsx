@@ -8,7 +8,7 @@ interface Props {
 
 export const SearchSkeleton: React.FC<Props> = ({ className }) => {
 	return (
-		<div className={cn("mt-20 w-full", className)}>
+		<div className={cn("mt-10 w-full", className)}>
 			{Array.from({ length: 8 }).map(() => (
 				<div className="flex justify-between items-center px-2 py-2 ">
 					<div className="flex items-center gap-5">

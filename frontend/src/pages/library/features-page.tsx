@@ -1,3 +1,4 @@
+import { Footer } from "@/components/footer"
 import { NotFoundFeatures } from "@/components/not-found/not-found-features"
 import FeaturesSongsSkeleton from "@/components/skeletons/features-songs-skeleton"
 import RenderSongs from "@/components/songs/render-songs"
@@ -36,15 +37,15 @@ export const FeaturesPage = () => {
 	return (
 		<div className="h-full w-full ">
 			<div className="relative min-h-full">
-				<div className="absolute inset-0 bg-linear-to-b from-[#5c5c5c] via-transparent to-transparent pointer-events-none -z-10"></div>
+				<div className="absolute inset-0 bg-linear-to-b from-[#333333] via-transparent to-transparent pointer-events-none -z-10"></div>
 				<div className="flex flex-col items-start gap-15 px-6 pt-5 md:pt-16">
 					<div className="flex md:flex-row flex-col items-center w-full justify-start gap-5 ">
 						<h3 className="text-gray-400 md:hidden">Playlist</h3>
 						<img src="/features-heart-big.png" alt="features" className="w-55 h-55 rounded-lg object-cover" />
 						<div className="flex flex-col gap-8">
-							<div className="flex flex-col items-start justify-start">
+							<div className="flex flex-col items-start justify-start ">
 								<h3 className="text-gray-400 hidden md:inline">Playlist</h3>
-								<h1 className="text-5xl font-extrabold">Featured Songs</h1>
+								<h1 className="text-5xl font-extrabold text-center ">Featured Songs</h1>
 							</div>
 							<div className="flex items-center md:items-start md:justify-start justify-center gap-2">
 								<p className="text-gray-400">{user?.fullName}</p>
@@ -66,6 +67,7 @@ export const FeaturesPage = () => {
 					<div className="w-full">
 						<RenderSongs songs={featuredSongs} className="flex flex-col" />
 					</div>
+					<Footer />
 				</div>
 			</div>
 		</div>

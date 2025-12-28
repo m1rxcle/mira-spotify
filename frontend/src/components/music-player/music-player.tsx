@@ -80,9 +80,9 @@ const MusicPlayer = () => {
 						alt={currentSong?.title}
 						className="w-12 h-12 md:w-16 md:h-16 rounded-md object-cover shadow-md shadow-black/50 "
 					/>
-					<div className="flex flex-col w-25 line-clamp-1 justify-center items-start">
-						<h3 className="text-white">{currentSong?.title}</h3>
-						<p className="text-gray-400">{currentSong?.artist}</p>
+					<div className="flex flex-col w-40  justify-center items-start">
+						<h3 className="text-white line-clamp-1">{currentSong?.title}</h3>
+						<p className="text-gray-400 line-clamp-1">{currentSong?.artist}</p>
 					</div>
 				</div>
 				<div className="flex items-center gap-10 justify-between ">
@@ -134,9 +134,9 @@ const MusicPlayer = () => {
 			<div className="relative flex justify-between items-center px-2 py-2 md:hidden z-50">
 				<div className="flex items-center gap-5">
 					<img className="w-12 h-12 rounded-md" src={currentSong?.imageUrl} />
-					<div className="flex flex-col justify-center items-start">
-						<h3 className="text-white">{currentSong?.title}</h3>
-						<p className="text-gray-400">{currentSong?.artist}</p>
+					<div className="flex flex-col justify-center items-start w-40">
+						<h3 className="text-white line-clamp-1">{currentSong?.title}</h3>
+						<p className="text-gray-400 line-clamp-1">{currentSong?.artist}</p>
 					</div>
 				</div>
 				<div className="flex items-center gap-2">

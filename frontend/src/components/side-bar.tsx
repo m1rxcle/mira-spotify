@@ -7,6 +7,7 @@ import ChangeSizeSideBar from "@/lib/change-size-sidebar"
 import { cn } from "@/lib/utils"
 import { useMusicStore } from "@/store/use-music-store"
 import { useAdminStore } from "@/store/use-admin-store"
+import { motion } from "framer-motion"
 
 const NAV_ITEMS = [
 	{
@@ -46,7 +47,7 @@ const SideBar = () => {
 					`hidden md:flex md:flex-col md:items-center md:py-8 md:px-4 md:justify-between md:h-screen md:bg-black md:backdrop-blur-md md:z-10 transition-all duration-300 ease-in-out`
 				)}
 			>
-				<div className="flex flex-col gap-2 items-center w-full group relative lg:mb-10">
+				<div className="flex flex-col gap-2 items-center w-full group relative ">
 					<div className="w-full">
 						<Link to="/" className="flex flex-row justify-center gap-2 items-center">
 							<div className="w-12 h-12">
@@ -54,7 +55,7 @@ const SideBar = () => {
 							</div>
 							<div
 								className={cn(
-									collapsed ? "lg:opacity-0 lg:scale-x-0 lg:w-0 lg:overflow-hidden" : "lg:opacity-100 lg:scale-100 lg:scale-x-100 lg:w-auto",
+									collapsed ? "lg:opacity-0 lg:scale-x-0 lg:w-0 lg:overflow-hidden" : "lg:opacity-100 lg:scale-100 lg:scale-x-100 lg:w-auto ",
 									"transition-transform ease-in-out duration-500 origin-left opacity-0 scale-0 scale-x-0 w-0 "
 								)}
 							>
@@ -67,7 +68,7 @@ const SideBar = () => {
 					</div>
 					<div
 						className={cn(
-							collapsed ? "opacity-0 scale-x-0 w-0 overflow-hidden" : "lg:opacity-100 lg:scale-100 lg:scale-x-100 lg:w-auto",
+							collapsed ? "opacity-0 scale-x-0 w-0 overflow-hidden mb-0" : "lg:opacity-100 lg:scale-100 lg:scale-x-100 lg:w-auto mb-20",
 							"transition-transform ease-in-out duration-500 origin-left opacity-0 scale-0 scale-x-0 w-0 "
 						)}
 					>
@@ -80,12 +81,12 @@ const SideBar = () => {
 					<div className="flex flex-col gap-10">
 						{NAV_ITEMS.map((item) => (
 							<NavLink key={item.href} to={item.href} className={({ isActive }) => (isActive ? "text-emerald-500" : "text-white/70")}>
-								<div className="flex gap-2 ">
+								<div className="flex gap-2">
 									<item.icon className="hover:text-emerald-500 transition-colors ease-in-out duration-700" />
 									<div
 										className={cn(
-											collapsed ? "opacity-0 scale-x-0 w-0 overflow-hidden" : "lg:opacity-100 lg:scale-100 lg:scale-x-100 lg:w-auto",
-											` hover:text-emerald-500 transition-colors ease-in-out duration-300  opacity-0 scale-0 scale-x-0 w-0`
+											collapsed ? "opacity-0  w-0 " : "lg:opacity-100 lg:scale-100  lg:w-auto",
+											` hover:text-emerald-500 transition-all ease-in-out duration-300 w-0 opacity-0`
 										)}
 									>
 										<span>{item.label}</span>
@@ -97,13 +98,17 @@ const SideBar = () => {
 
 					<div className="flex flex-col gap-4 items-center justify-center ">
 						{isAdmin && (
-							<Link
-								to={"/admin"}
-								className="flex  items-center justify-center border-2 border-zinc-800 p-4 rounded-2xl hover:border-emerald-500 hover:text-emerald-500 transition-colors ease-in-out duration-300"
+							<motion.div
+								transition={{ type: "spring", damping: 15, stiffness: 300 }}
+								whileHover={{ scale: 1.05, y: -2 }}
+								whileTap={{ scale: 0.9, y: 2 }}
+								className="flex cursor-pointer items-center justify-center border-2 border-zinc-800 rounded-2xl hover:border-emerald-500 hover:text-emerald-500 transition-colors ease-in-out duration-300"
 							>
-								<LayoutDashboardIcon className={collapsed ? "size-4 mr-2 translate-x-1" : "size-4 lg:mr-2"} />
-								<span className={collapsed ? "hidden" : "md:hidden md:translate-x-1 lg:block "}>Admin Dashboard</span>
-							</Link>
+								<Link to={"/admin"} className="flex items-center p-4">
+									<LayoutDashboardIcon className={collapsed ? "size-4 mr-2 translate-x-1" : "size-4 lg:mr-2"} />
+									<span className={collapsed ? "hidden" : "md:hidden md:translate-x-1 lg:block "}>Admin Dashboard</span>
+								</Link>
+							</motion.div>
 						)}
 					</div>
 				</div>
