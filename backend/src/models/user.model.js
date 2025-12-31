@@ -21,6 +21,12 @@ const userSchema = new mongoose.Schema(
 				ref: "Song",
 			},
 		],
+		featuredAlbums: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Album",
+			},
+		],
 	},
 	{ timestamps: true }
 )

@@ -1,9 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { axiosInstance } from "@/lib/axios"
-import { useUser } from "@clerk/clerk-react"
-import { Loader } from "lucide-react"
-import React, { useRef } from "react"
-import { useNavigate } from "react-router-dom"
+import { useUser } from '@clerk/clerk-react'
+import { Loader } from 'lucide-react'
+import React, { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { Card, CardContent } from '@/components/ui/card'
+import { axiosInstance } from '@/lib/axios'
 
 const AuthCallbackPage = () => {
 	const { isLoaded, user } = useUser()
@@ -14,7 +15,7 @@ const AuthCallbackPage = () => {
 		const syncUser = async () => {
 			if (!isLoaded || !user || syncAttempted.current) return
 			try {
-				await axiosInstance.post("/auth/callback", {
+				await axiosInstance.post('/auth/callback', {
 					id: user.id,
 					firstName: user.firstName,
 					lastName: user.lastName,
@@ -22,9 +23,9 @@ const AuthCallbackPage = () => {
 				})
 				syncAttempted.current = true
 			} catch (error) {
-				console.log("[Frontend] Error in Auth callback", error)
+				console.log('[Frontend] Error in Auth callback', error)
 			} finally {
-				navigate("/")
+				navigate('/')
 			}
 		}
 

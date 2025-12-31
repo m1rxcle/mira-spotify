@@ -1,5 +1,6 @@
-import { axiosInstance } from "@/lib/axios"
-import { create } from "zustand"
+import { create } from 'zustand'
+
+import { axiosInstance } from '@/lib/axios'
 
 type AdminStore = {
 	isAdmin: boolean
@@ -13,11 +14,11 @@ export const useAdminStore = create<AdminStore>()((set) => ({
 	checkIsAdmin: async () => {
 		set({ isLoading: true })
 		try {
-			const response = await axiosInstance.get("/admin/checkAdmin")
+			const response = await axiosInstance.get('/admin/checkAdmin')
 			set({ isAdmin: response.data.admin })
 		} catch (error) {
 			set({ isAdmin: false })
-			console.log("Error checking admin status", error)
+			console.log('Error checking admin status', error)
 		} finally {
 			set({ isLoading: false })
 		}

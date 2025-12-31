@@ -1,5 +1,6 @@
-import { useMusicStore } from "@/store/use-music-store"
-import { RiArrowDropLeftLine, RiArrowDropRightLine } from "@remixicon/react"
+import { RiArrowDropLeftLine, RiArrowDropRightLine } from '@remixicon/react'
+
+import { useMusicStore } from '@/store/use-music-store'
 
 const ChangeSizeSideBar = () => {
 	const { changeArrow, setChangeArrow, collapsed, setCollapsed } = useMusicStore()
@@ -16,7 +17,11 @@ const ChangeSizeSideBar = () => {
 					 bg-gray-500/30 w-8 h-8 
 					 hover:opacity-100 hover:cursor-pointer"
 		>
-			{changeArrow ? <RiArrowDropRightLine className="size-8" /> : <RiArrowDropLeftLine className="size-8" />}
+			{changeArrow ? (
+				<RiArrowDropRightLine className="size-8" />
+			) : (
+				<RiArrowDropLeftLine className="size-8" />
+			)}
 		</div>
 	)
 }

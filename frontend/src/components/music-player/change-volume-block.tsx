@@ -1,6 +1,7 @@
-import { cn } from "@/lib/utils"
-import { Slider } from "../ui/slider"
-import { usePlayerStore } from "@/store/use-player-store"
+import { Slider } from '../ui/slider'
+
+import { cn } from '@/lib/utils'
+import { usePlayerStore } from '@/store/use-player-store'
 
 interface ChangeVolumeBlockProps {
 	isOpenVolume: boolean
@@ -10,7 +11,12 @@ const ChangeVolumeBlock = ({ isOpenVolume }: ChangeVolumeBlockProps) => {
 	const { volume, setChangeVolume } = usePlayerStore()
 
 	return (
-		<div className={cn(isOpenVolume ? "opacity-100" : "opacity-0", "transition-all duration-300 ease-in-out")}>
+		<div
+			className={cn(
+				isOpenVolume ? 'opacity-100' : 'opacity-0',
+				'transition-all duration-300 ease-in-out'
+			)}
+		>
 			<Slider
 				defaultValue={[0.5]}
 				max={1}

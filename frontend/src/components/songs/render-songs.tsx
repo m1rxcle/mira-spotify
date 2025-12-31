@@ -1,11 +1,13 @@
-import type { Song } from "@/types"
-import { usePlayerStore } from "@/store/use-player-store"
-import { SongTemplate } from "./song-template"
-import { cn } from "@/lib/utils"
-import { useUserStore } from "@/store/use-user-store"
+import { SongTemplate } from './song-template'
+
+import { cn } from '@/lib/utils'
+import { usePlayerStore } from '@/store/use-player-store'
+import { useUserStore } from '@/store/use-user-store'
+import type { Song } from '@/types'
 
 const RenderSongs = ({ songs, className }: { songs: Song[]; className?: string }) => {
-	const { currentSong, isPlaying, timeLeft, handleSetCurrentSong, togglePlay, playAlbum } = usePlayerStore()
+	const { currentSong, isPlaying, timeLeft, handleSetCurrentSong, togglePlay, playAlbum } =
+		usePlayerStore()
 	const { featuredSongs, toggleFeaturedSongs } = useUserStore()
 
 	const handlePlaySongs = (index: number) => {
@@ -15,7 +17,7 @@ const RenderSongs = ({ songs, className }: { songs: Song[]; className?: string }
 	}
 
 	return (
-		<div className={cn("grid grid-cols-1 md:grid-cols-2 gap-4", className)}>
+		<div className={cn('grid grid-cols-1 md:grid-cols-2 gap-4', className)}>
 			{songs.map((song, index) => {
 				const isCurrentSong = song._id === currentSong?._id
 				const isFeatured = featuredSongs.some((featuredSong) => featuredSong._id === song._id)

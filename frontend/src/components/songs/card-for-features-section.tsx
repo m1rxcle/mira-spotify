@@ -1,7 +1,8 @@
-import type { Song } from "@/types"
-import { ChevronRight } from "lucide-react"
-import React from "react"
-import { Link } from "react-router-dom"
+import { ChevronRight } from 'lucide-react'
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+import type { Song } from '@/types'
 
 interface Props {
 	hasPreview: boolean
@@ -28,10 +29,18 @@ export const CardForFeaturesSection: React.FC<Props> = ({ hasPreview, featuredSo
 				{hasPreview && (
 					<div className="hidden lg:flex opacity-70">
 						<div className="absolute top-6 right-7 w-13 h-13 z-10">
-							<img src={featuredSongs[0]?.imageUrl ?? ""} className="w-15 h-13 rounded-lg" alt={featuredSongs[0]?.title ?? ""} />
+							<img
+								src={featuredSongs[0]?.imageUrl ?? ''}
+								className="w-15 h-13 rounded-lg"
+								alt={featuredSongs[0]?.title ?? ''}
+							/>
 						</div>
 						<div className="absolute top-4 right-3  w-13 h-13 z-0">
-							<img src={featuredSongs[1]?.imageUrl ?? ""} className="w-15 h-13 rounded-lg" alt={featuredSongs[1]?.title ?? ""} />
+							<img
+								src={featuredSongs[1]?.imageUrl ?? ''}
+								className="w-15 h-13 rounded-lg"
+								alt={featuredSongs[1]?.title ?? ''}
+							/>
 						</div>
 					</div>
 				)}

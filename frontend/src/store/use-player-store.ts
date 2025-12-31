@@ -1,7 +1,8 @@
-import { COLORS } from "@/lib/data"
-import { getRandomColorsForPlayer } from "@/lib/get-radom-color-for-player"
-import type { Song } from "@/types"
-import { create } from "zustand"
+import { create } from 'zustand'
+
+import { COLORS } from '@/lib/data'
+import { getRandomColorsForPlayer } from '@/lib/get-radom-color-for-player'
+import type { Song } from '@/types'
 
 type PlayerStore = {
 	currentSong: Song | null
@@ -49,7 +50,11 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 	},
 
 	initializeQueue: (songs: Song[]) => {
-		set({ queue: songs, currentSong: get().currentSong || songs[0], currentIndex: get().currentIndex === -1 ? 0 : get().currentIndex })
+		set({
+			queue: songs,
+			currentSong: get().currentSong || songs[0],
+			currentIndex: get().currentIndex === -1 ? 0 : get().currentIndex,
+		})
 	},
 	playAlbum: (songs: Song[], startIndex = 0) => {
 		if (songs.length === 0) return

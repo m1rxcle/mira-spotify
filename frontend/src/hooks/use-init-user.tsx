@@ -1,6 +1,7 @@
-import { useUserStore } from "@/store/use-user-store"
-import { useAuth } from "@clerk/clerk-react"
-import { useEffect } from "react"
+import { useAuth } from '@clerk/clerk-react'
+import { useEffect } from 'react'
+
+import { useUserStore } from '@/store/use-user-store'
 
 export const useInitUseR = () => {
 	const { isLoaded, isSignedIn, getToken } = useAuth()

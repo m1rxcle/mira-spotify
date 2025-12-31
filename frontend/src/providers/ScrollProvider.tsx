@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect } from 'react'
 
 const ScrollContainer = ({ children }: { children: React.ReactNode }) => {
 	const [scrolling, setScrolling] = useState(false)
@@ -14,12 +14,15 @@ const ScrollContainer = ({ children }: { children: React.ReactNode }) => {
 			timeout = setTimeout(() => setScrolling(false), 1000) // исчезает через 1 сек после скролла
 		}
 
-		el.addEventListener("scroll", onScroll)
-		return () => el.removeEventListener("scroll", onScroll)
+		el.addEventListener('scroll', onScroll)
+		return () => el.removeEventListener('scroll', onScroll)
 	}, [])
 
 	return (
-		<div ref={ref} className={`flex-1 min-h-0 overflow-y-auto scrollbar ${scrolling ? "scrolling" : ""}`}>
+		<div
+			ref={ref}
+			className={`flex-1 min-h-0 overflow-y-auto scrollbar ${scrolling ? 'scrolling' : ''}`}
+		>
 			{children}
 		</div>
 	)

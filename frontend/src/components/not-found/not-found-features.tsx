@@ -1,5 +1,5 @@
-import { RiDislikeFill } from "@remixicon/react"
-import React from "react"
+import { RiDislikeFill } from '@remixicon/react'
+import React from 'react'
 
 interface Props {
 	className?: string

@@ -1,4 +1,4 @@
-import { COLORS } from "./data"
+import { COLORS } from './data'
 
 export const getRandomColorsForPlayer = (): string => {
 	const randomIndex = Math.floor(Math.random() * COLORS.length)

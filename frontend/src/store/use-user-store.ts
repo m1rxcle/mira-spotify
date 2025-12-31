@@ -1,12 +1,14 @@
-import { axiosInstance } from "@/lib/axios"
-import type { Song } from "@/types"
-import { create } from "zustand"
+import { create } from 'zustand'
+
+import { axiosInstance } from '@/lib/axios'
+import type { Album, Song } from '@/types'
 
 type UserStore = {
 	token: string | null
 
 	search: Song[]
 	featuredSongs: Song[]
+	featuredAlbums: Album[]
 	message: string
 	isLoading: boolean
 	hasSearched: boolean
@@ -16,7 +18,10 @@ type UserStore = {
 	setSearch: (query: string) => void
 
 	getFeaturedSongs: () => void
+	getFeaturedAlbums: () => void
+
 	toggleFeaturedSongs: (songId: string) => void
+	toggleFeaturedAlbums: (albumId: string) => void
 }
 
 export const useUserStore = create<UserStore>()((set, get) => ({
@@ -24,7 +29,8 @@ export const useUserStore = create<UserStore>()((set, get) => ({
 
 	search: [],
 	featuredSongs: [],
-	message: "",
+	featuredAlbums: [],
+	message: '',
 
 	isLoading: false,
 	hasSearched: false,
@@ -32,7 +38,6 @@ export const useUserStore = create<UserStore>()((set, get) => ({
 	setToken: (token: string | null) => {
 		set({ token })
 	},
-
 	getFeaturedSongs: async () => {
 		const token = get().token
 
@@ -43,20 +48,68 @@ export const useUserStore = create<UserStore>()((set, get) => ({
 		set({ isLoading: true })
 
 		try {
-			const response = await axiosInstance.get("/users/features", {
+			const response = await axiosInstance.get('/users/features', {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			console.log("TOKEN:", token)
-			console.log("RESPONSE:", response.data)
 			set({ featuredSongs: response.data })
 		} catch (error) {
-			console.log("Error fetching songs in store", error)
+			console.log('Error fetching songs in store', error)
 		} finally {
 			set({ isLoading: false })
 		}
 	},
+
+	getFeaturedAlbums: async () => {
+		const token = get().token
+
+		if (!token) {
+			return
+		}
+
+		set({ isLoading: true })
+		try {
+			const response = await axiosInstance.get('/users/features-albums', {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			set({ featuredAlbums: response.data })
+		} catch (error) {
+			console.log('Error fetching albums in store', error)
+		} finally {
+			set({ isLoading: false })
+		}
+	},
+
+	toggleFeaturedAlbums: async (albumId: string) => {
+		const token = get().token
+
+		if (!token) {
+			return
+		}
+
+		set({ isLoading: true })
+		try {
+			const response = await axiosInstance.post(
+				'/users/features-albums',
+				{ albumId },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+			set({ message: response.data.message })
+			await get().getFeaturedAlbums()
+		} catch (error) {
+			console.log('Error fetching albums in store', error)
+		} finally {
+			set({ isLoading: false })
+		}
+	},
+
 	toggleFeaturedSongs: async (songId: string) => {
 		const token = get().token
 
@@ -67,7 +120,7 @@ export const useUserStore = create<UserStore>()((set, get) => ({
 		set({ isLoading: true })
 		try {
 			const response = await axiosInstance.post(
-				"/users/features",
+				'/users/features',
 				{ songId },
 				{
 					headers: {
@@ -78,7 +131,7 @@ export const useUserStore = create<UserStore>()((set, get) => ({
 			set({ message: response.data.message })
 			await get().getFeaturedSongs()
 		} catch (error) {
-			console.log("Error fetching songs in store", error)
+			console.log('Error fetching songs in store', error)
 		} finally {
 			set({ isLoading: false })
 		}
@@ -91,11 +144,11 @@ export const useUserStore = create<UserStore>()((set, get) => ({
 		set({ hasSearched: false, isLoading: true })
 
 		try {
-			const response = await axiosInstance.post("/search", { query })
+			const response = await axiosInstance.post('/search', { query })
 			set({ search: response.data })
 			set({ hasSearched: true })
 		} catch (error: unknown) {
-			console.log("Error fetching songs in store", error)
+			console.log('Error fetching songs in store', error)
 		} finally {
 			set({ isLoading: false })
 		}

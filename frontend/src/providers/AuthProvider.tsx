@@ -1,16 +1,17 @@
-import { axiosInstance } from "@/lib/axios"
-import { useAdminStore } from "@/store/use-admin-store"
-import { useAuth } from "@clerk/clerk-react"
-import React from "react"
+import { useAuth } from '@clerk/clerk-react'
+import React from 'react'
+
+import { axiosInstance } from '@/lib/axios'
+import { useAdminStore } from '@/store/use-admin-store'
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const { getToken } = useAuth()
 
 	const updateApiToken = (token: string | null) => {
 		if (token) {
-			axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`
+			axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
 		} else {
-			delete axiosInstance.defaults.headers.common["Authorization"]
+			delete axiosInstance.defaults.headers.common['Authorization']
 		}
 	}
 
@@ -26,7 +27,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				}
 			} catch (error) {
 				updateApiToken(null)
-				console.log("Error in AuthProvider", error)
+				console.log('Error in AuthProvider', error)
 			}
 		}
 

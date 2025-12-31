@@ -1,6 +1,7 @@
-import { useSignIn } from "@clerk/clerk-react"
-import { Button } from "./ui/button"
-import { RiGoogleFill } from "@remixicon/react"
+import { useSignIn } from '@clerk/clerk-react'
+import { RiGoogleFill } from '@remixicon/react'
+
+import { Button } from './ui/button'
 
 const SingInOAuthButtons = () => {
 	const { signIn, isLoaded } = useSignIn()
@@ -9,14 +10,18 @@ const SingInOAuthButtons = () => {
 
 	const signInWithGoogle = () => {
 		signIn.authenticateWithRedirect({
-			strategy: "oauth_google",
-			redirectUrl: "/sso-callback",
-			redirectUrlComplete: "/auth-callback",
+			strategy: 'oauth_google',
+			redirectUrl: '/sso-callback',
+			redirectUrlComplete: '/auth-callback',
 		})
 	}
 
 	return (
-		<Button onClick={signInWithGoogle} variant={"secondary"} className="w-full text-white border-zinc-200 h-11">
+		<Button
+			onClick={signInWithGoogle}
+			variant={'secondary'}
+			className="w-full text-white border-zinc-200 h-11"
+		>
 			<RiGoogleFill />
 			Continue with Google
 		</Button>

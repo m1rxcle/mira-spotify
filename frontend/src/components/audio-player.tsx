@@ -1,11 +1,13 @@
-import { usePlayerStore } from "@/store/use-player-store"
-import React, { useEffect } from "react"
+import React, { useEffect } from 'react'
+
+import { usePlayerStore } from '@/store/use-player-store'
 
 const AudioPlayer = () => {
 	const audioRef = React.useRef<HTMLAudioElement>(null)
 	const prevSongRef = React.useRef<string | null>(null)
 
-	const { currentSong, isPlaying, volume, setChangeVolume, setTimeLeft, playNextSong } = usePlayerStore()
+	const { currentSong, isPlaying, volume, setChangeVolume, setTimeLeft, playNextSong } =
+		usePlayerStore()
 
 	useEffect(() => {
 		if (isPlaying) audioRef.current?.play()
@@ -19,9 +21,9 @@ const AudioPlayer = () => {
 			playNextSong()
 		}
 
-		audio?.addEventListener("ended", handleEnded)
+		audio?.addEventListener('ended', handleEnded)
 
-		return () => audio?.removeEventListener("ended", handleEnded)
+		return () => audio?.removeEventListener('ended', handleEnded)
 	}, [playNextSong])
 
 	useEffect(() => {
@@ -49,8 +51,8 @@ const AudioPlayer = () => {
 
 			setTimeLeft(time)
 		}
-		audio.addEventListener("timeupdate", handleTimeUpdate)
-		return () => audio.removeEventListener("timeupdate", handleTimeUpdate)
+		audio.addEventListener('timeupdate', handleTimeUpdate)
+		return () => audio.removeEventListener('timeupdate', handleTimeUpdate)
 	}, [setTimeLeft])
 
 	useEffect(() => {
@@ -64,9 +66,9 @@ const AudioPlayer = () => {
 			setChangeVolume([vol])
 		}
 
-		audio.addEventListener("volumechange", handleVolumeUpdate)
+		audio.addEventListener('volumechange', handleVolumeUpdate)
 
-		return () => audio.removeEventListener("volumechange", handleVolumeUpdate)
+		return () => audio.removeEventListener('volumechange', handleVolumeUpdate)
 	}, [setChangeVolume, volume])
 
 	return <audio ref={audioRef} />

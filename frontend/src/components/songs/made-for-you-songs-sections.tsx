@@ -1,9 +1,16 @@
-import type { Song } from "@/types"
-import MadeForYouSkeleton from "../skeletons/made-for-you-songs-skeleton"
+import RenderSongs from './render-songs'
+import MadeForYouSkeleton from '../skeletons/made-for-you-songs-skeleton'
 
-import RenderSongs from "./render-songs"
+import type { Song } from '@/types'
 
-const MadeForYouSongsSection = ({ madeForYouSongs, isLoading }: { madeForYouSongs: Song[]; isLoading: boolean }) => {
+
+const MadeForYouSongsSection = ({
+	madeForYouSongs,
+	isLoading,
+}: {
+	madeForYouSongs: Song[]
+	isLoading: boolean
+}) => {
 	if (!madeForYouSongs || isLoading) {
 		return <MadeForYouSkeleton />
 	}

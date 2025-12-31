@@ -1,5 +1,6 @@
-import { useUserStore } from "@/store/use-user-store"
-import { CardForFeaturesSection } from "./card-for-features-section"
+import { CardForFeaturesSection } from './card-for-features-section'
+
+import { useUserStore } from '@/store/use-user-store'
 
 const FeaturesSongsAndHistorySection = () => {
 	const { featuredSongs } = useUserStore()

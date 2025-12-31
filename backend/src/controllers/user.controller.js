@@ -1,3 +1,4 @@
+import { Album } from "../models/album.model.js"
 import { Song } from "../models/song.model.js"
 import { User } from "../models/user.model.js"
 
@@ -33,6 +34,23 @@ export const getUsersFeatures = async (req, res) => {
 	}
 }
 
+export const getUsersFeaturesAlbums = async (req, res) => {
+	try {
+		const currentUserId = req.auth().userId
+
+		const user = await User.findOne({ clerkId: currentUserId }).select("featuredAlbums").populate("featuredAlbums")
+
+		if (!user) {
+			return res.status(404).json({ message: "No features found" })
+		}
+
+		res.status(200).json(user.featuredAlbums)
+	} catch (error) {
+		console.error("Error fetching features:", error)
+		res.status(500).json({ message: "Server error", error: error.message })
+	}
+}
+
 export const toggleFeatureSong = async (req, res) => {
 	try {
 		const { songId } = req.body
@@ -50,7 +68,7 @@ export const toggleFeatureSong = async (req, res) => {
 		const isAlreadyFeatured = user.featuredSongs.some((song) => song._id.toString() === songId)
 
 		if (!isAlreadyFeatured) {
-			user.featuredSongs.push(song._id)
+			user.featuredSongs.unshift(song._id)
 			await user.save()
 			return res.status(200).json({ message: "Song added to features successfully!" })
 		}
@@ -60,6 +78,37 @@ export const toggleFeatureSong = async (req, res) => {
 		return res.status(200).json({ message: "Song removed from features successfully!" })
 	} catch (error) {
 		console.error("Error toggling feature song:", error)
+		res.status(500).json({ message: "Server error", error: error.message })
+	}
+}
+
+export const toggleFeaturesAlbums = async (req, res) => {
+	try {
+		const { albumId } = req.body
+
+		const currentUserId = req.auth().userId
+
+		const user = await User.findOne({ clerkId: currentUserId }).select("featuredAlbums").populate("featuredAlbums")
+
+		const album = await Album.findById(albumId)
+
+		if (!album) {
+			return res.status(404).json({ message: "Album not found" })
+		}
+
+		const isAlreadyFeatured = user.featuredAlbums.some((album) => album._id.toString() === albumId)
+
+		if (!isAlreadyFeatured) {
+			user.featuredAlbums.unshift(album._id)
+			await user.save()
+			return res.status(200).json({ message: "Album added to features successfully!" })
+		}
+
+		user.featuredAlbums = user.featuredAlbums.filter((album) => album._id.toString() !== albumId)
+		await user.save()
+		return res.status(200).json({ message: "Album removed from features successfully!" })
+	} catch (error) {
+		console.error("Error toggling feature album:", error)
 		res.status(500).json({ message: "Server error", error: error.message })
 	}
 }

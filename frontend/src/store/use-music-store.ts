@@ -1,7 +1,8 @@
-import { axiosInstance } from "@/lib/axios"
-import { COLORS } from "@/lib/data"
-import type { Album, Song } from "@/types"
-import { create } from "zustand"
+import { create } from 'zustand'
+
+import { axiosInstance } from '@/lib/axios'
+import { COLORS } from '@/lib/data'
+import type { Album, Song } from '@/types'
 
 type MusicStore = {
 	trendingSongs: Song[]
@@ -43,10 +44,10 @@ export const useMusicStore = create<MusicStore>()((set) => ({
 	setFetchMadeForYouSongs: async () => {
 		set({ isLoading: true })
 		try {
-			const response = await axiosInstance.get("/songs/made-for-you")
+			const response = await axiosInstance.get('/songs/made-for-you')
 			set({ madeForYouSongs: response.data })
 		} catch (error) {
-			console.log("Error fetching songs", error)
+			console.log('Error fetching songs', error)
 		} finally {
 			set({ isLoading: false })
 		}
@@ -56,10 +57,10 @@ export const useMusicStore = create<MusicStore>()((set) => ({
 		set({ isLoading: true })
 
 		try {
-			const response = await axiosInstance.get("/songs/trending")
+			const response = await axiosInstance.get('/songs/trending')
 			set({ trendingSongs: response.data })
 		} catch (error) {
-			console.log("Error fetching songs", error)
+			console.log('Error fetching songs', error)
 		} finally {
 			set({ isLoading: false })
 		}
@@ -68,10 +69,10 @@ export const useMusicStore = create<MusicStore>()((set) => ({
 		set({ isLoading: true })
 
 		try {
-			const response = await axiosInstance.get("/albums")
+			const response = await axiosInstance.get('/albums')
 			set({ albums: response.data })
 		} catch (error) {
-			console.log("Error fetching albums", error)
+			console.log('Error fetching albums', error)
 		} finally {
 			set({ isLoading: false })
 		}
@@ -83,7 +84,7 @@ export const useMusicStore = create<MusicStore>()((set) => ({
 			const response = await axiosInstance.get(`/albums/${albumId}`)
 			set({ currentAlbum: response.data })
 		} catch (error) {
-			console.log("Fetch album by id error", error)
+			console.log('Fetch album by id error', error)
 		} finally {
 			set({ isLoading: false })
 		}

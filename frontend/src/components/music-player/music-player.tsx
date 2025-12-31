@@ -1,5 +1,4 @@
-import { cn } from "@/lib/utils"
-import { useMusicStore } from "@/store/use-music-store"
+import { useClickAway } from '@reactuses/core'
 import {
 	RiArrowGoBackLine,
 	RiArrowUpDownLine,
@@ -8,23 +7,38 @@ import {
 	RiSkipLeftLine,
 	RiSkipRightLine,
 	RiVolumeDownLine,
-} from "@remixicon/react"
-import MusicPlayerSkeleton from "../skeletons/music-player-skeleton"
-import { usePlayerStore } from "@/store/use-player-store"
-import ChangeVolumeBlock from "./change-volume-block"
-import { useRef, useState } from "react"
-import { useClickAway } from "@reactuses/core"
-import { useUserStore } from "@/store/use-user-store"
-import AddToFavorite from "../songs/add-to-favorite-button"
+} from '@remixicon/react'
+import { useEffect, useRef, useState } from 'react'
+
+import { AnimatedMessageForSongs } from './animated-message-for-songs'
+import ChangeVolumeBlock from './change-volume-block'
+import MusicPlayerSkeleton from '../skeletons/music-player-skeleton'
+import AddToFavorite from '../songs/add-to-favorite-button'
+
+import { cn } from '@/lib/utils'
+import { useMusicStore } from '@/store/use-music-store'
+import { usePlayerStore } from '@/store/use-player-store'
+import { useUserStore } from '@/store/use-user-store'
+
 
 const MusicPlayer = () => {
 	const [openVolume, setOpenVolume] = useState(false)
+	const [showMessage, setShowMessage] = useState(false)
+
 	const volumeRef = useRef<HTMLDivElement>(null)
 	useClickAway(volumeRef, () => setOpenVolume(false))
 
 	const { isLoading } = useMusicStore()
-	const { featuredSongs, toggleFeaturedSongs } = useUserStore()
-	const { currentSong, isPlaying, changeColors, timeLeft, togglePlay, playNextSong, playPreviousSong } = usePlayerStore()
+	const { featuredSongs, message, toggleFeaturedSongs } = useUserStore()
+	const {
+		currentSong,
+		isPlaying,
+		changeColors,
+		timeLeft,
+		togglePlay,
+		playNextSong,
+		playPreviousSong,
+	} = usePlayerStore()
 
 	const backToPrevSong = () => {
 		playPreviousSong()
@@ -37,6 +51,18 @@ const MusicPlayer = () => {
 	const handlePlayMusic = () => {
 		togglePlay()
 	}
+
+	useEffect(() => {
+		if (!message) return
+
+		setShowMessage(true)
+
+		const timer = setTimeout(() => {
+			setShowMessage(false)
+		}, 3000)
+
+		return () => clearTimeout(timer)
+	}, [message])
 
 	if (isLoading || !currentSong) {
 		return <MusicPlayerSkeleton />
@@ -58,21 +84,27 @@ const MusicPlayer = () => {
 	return (
 		<div
 			className={cn(
-				changeColors === "red" && "bg-red-500/50",
-				changeColors === "green" && "bg-green-500/50",
-				changeColors === "blue" && "bg-blue-500/50",
-				changeColors === "yellow" && "bg-yellow-500/50",
-				changeColors === "orange" && "bg-orange-500/50",
-				changeColors === "gray" && "bg-gray-500/50",
-				changeColors === "cyan" && "bg-cyan-500/50",
-				changeColors === "indigo" && "bg-indigo-500/50",
-				changeColors === "pink" && "bg-pink-500/50",
-				changeColors === "teal" && "bg-teal-500/50",
-				changeColors === "amber" && "bg-amber-500/50",
-				"md:rounded-2xl rounded-lg md:h-22 h-16 shrink-0"
+				changeColors === 'red' && 'bg-red-500/50',
+				changeColors === 'green' && 'bg-green-500/50',
+				changeColors === 'blue' && 'bg-blue-500/50',
+				changeColors === 'yellow' && 'bg-yellow-500/50',
+				changeColors === 'orange' && 'bg-orange-500/50',
+				changeColors === 'gray' && 'bg-gray-500/50',
+				changeColors === 'cyan' && 'bg-cyan-500/50',
+				changeColors === 'indigo' && 'bg-indigo-500/50',
+				changeColors === 'pink' && 'bg-pink-500/50',
+				changeColors === 'teal' && 'bg-teal-500/50',
+				changeColors === 'amber' && 'bg-amber-500/50',
+				'md:rounded-2xl rounded-lg md:h-22 h-16 shrink-0'
 			)}
 		>
-			<div className="hidden md:flex justify-between items-center pl-2 pr-6 py-2 md:py-2.5 text-white/50 cursor-pointer relative z-50">
+			<div className="hidden md:flex justify-between items-center pl-2 pr-6 py-2 md:py-2.5 text-white/50  relative z-50">
+				<AnimatedMessageForSongs
+					showMessage={showMessage}
+					currentSong={currentSong}
+					message={message}
+					setShowMessage={setShowMessage}
+				/>
 				<div className="flex items-center justify-center gap-4">
 					<img
 						loading="lazy"
@@ -96,17 +128,30 @@ const MusicPlayer = () => {
 							songId={currentSong?._id}
 						/>
 					</div>
-					<div className="flex items-center gap-4 justify-between">
+					<div className="flex items-center gap-4 justify-between cursor-pointer">
 						<div className="hover:text-white transition-colors ease-in-out duration-300">
 							<RiArrowUpDownLine size={25} />
 						</div>
-						<div onClick={backToPrevSong} className="hover:text-white hover:scale-110 transition-all  ease-in-out duration-300">
+						<div
+							onClick={backToPrevSong}
+							className="hover:text-white hover:scale-110 transition-all  ease-in-out duration-300"
+						>
 							<RiSkipLeftLine size={25} />
 						</div>
-						<div onClick={handlePlayMusic} className="bg-[#12c74b] rounded-full p-1.5 hover:scale-105 transition-all  ease-in-out duration-300">
-							{isPlaying ? <RiPauseMiniLine className="text-black/70" size={30} /> : <RiPlayFill className="text-black/70" size={30} />}
+						<div
+							onClick={handlePlayMusic}
+							className="bg-[#12c74b] rounded-full p-1.5 hover:scale-105 transition-all  ease-in-out duration-300"
+						>
+							{isPlaying ? (
+								<RiPauseMiniLine className="text-black/70" size={30} />
+							) : (
+								<RiPlayFill className="text-black/70" size={30} />
+							)}
 						</div>
-						<div onClick={skipMusicHandler} className="hover:text-white hover:scale-110 transition-all  ease-in-out duration-300">
+						<div
+							onClick={skipMusicHandler}
+							className="hover:text-white hover:scale-110 transition-all  ease-in-out duration-300"
+						>
 							<RiSkipRightLine size={25} />
 						</div>
 						<div className="hover:text-white transition-colors ease-in-out duration-300">
@@ -114,7 +159,10 @@ const MusicPlayer = () => {
 						</div>
 					</div>
 				</div>
-				<div ref={volumeRef} className="flex gap-8 items-center hover:text-white transition-colors ease-in-out duration-300 relative">
+				<div
+					ref={volumeRef}
+					className="flex gap-8 items-center hover:text-white transition-colors ease-in-out duration-300 relative cursor-pointer"
+				>
 					<RiVolumeDownLine onClick={() => setOpenVolume(!openVolume)} size={25} />
 					<div className="absolute -top-45 -left-2">
 						<ChangeVolumeBlock isOpenVolume={openVolume} />
@@ -125,13 +173,19 @@ const MusicPlayer = () => {
 					style={{
 						width: `${progress}%`,
 					}}
-					className={`smooth-progress -z-50 absolute -bottom-0.5 left-0  h-full bg-gray-500/50 md:rounded-2xl rounded-lg  pl-2 pr-6 py-2 md:py-2.5 pointer-events-none `}
+					className={`smooth-progress -z-50 absolute -bottom-0.5 left-0 h-full bg-gray-500/50 rounded-lg rounded-tr-none rounded-br-none  pl-2 pr-6 py-2 md:py-2.5 pointer-events-none `}
 				></div>
 			</div>
 
 			{/* mobile */}
 
-			<div className="relative flex justify-between items-center px-2 py-2 md:hidden z-50">
+			<div className="relative flex justify-between items-center px-2 py-2 md:hidden z-50 ">
+				<AnimatedMessageForSongs
+					currentSong={currentSong}
+					message={message}
+					setShowMessage={setShowMessage}
+					showMessage={showMessage}
+				/>
 				<div className="flex items-center gap-5">
 					<img className="w-12 h-12 rounded-md" src={currentSong?.imageUrl} />
 					<div className="flex flex-col justify-center items-start w-40">
@@ -150,7 +204,10 @@ const MusicPlayer = () => {
 							songId={currentSong?._id}
 						/>
 					</div>
-					<div onClick={handlePlayMusic} className="cursor-pointer p-1.5 hover:scale-110  transition-all  ease-in-out duration-300">
+					<div
+						onClick={handlePlayMusic}
+						className="cursor-pointer p-1.5 hover:scale-110  transition-all  ease-in-out duration-300"
+					>
 						{isPlaying ? (
 							<RiPauseMiniLine className="text-gray-400 hover:text-black" size={30} />
 						) : (
@@ -168,7 +225,7 @@ const MusicPlayer = () => {
 					style={{
 						width: `${progress}%`,
 					}}
-					className={`smooth-progress md:rounded-2xl rounded-lg  -z-50 absolute bottom-0 left-0  h-full bg-gray-500/50 flex justify-between items-center px-2 py-2 md:hidden pointer-events-none `}
+					className={`smooth-progress rounded-2xl rounded-tr-none rounded-br-none -z-50 absolute bottom-0 left-0  h-full bg-gray-500/50 flex justify-between items-center px-2 py-2 md:hidden pointer-events-none `}
 				></div>
 			</div>
 		</div>
