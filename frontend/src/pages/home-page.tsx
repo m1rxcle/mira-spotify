@@ -23,7 +23,7 @@ const HomePage = () => {
 		setFetchAlbums,
 	} = useMusicStore()
 	const { isPlaying, togglePlay } = usePlayerStore()
-	const { token, getFeaturedSongs, featuredAlbums, getFeaturedAlbums } = useUserStore()
+	const { token, history, getFeaturedSongs, getSongsHistory, getFeaturedAlbums } = useUserStore()
 
 	const handlePlayMusic = () => {
 		// Logic to play music
@@ -34,7 +34,8 @@ const HomePage = () => {
 		if (!token) return
 		getFeaturedSongs()
 		getFeaturedAlbums()
-	}, [token, getFeaturedSongs, getFeaturedAlbums])
+		getSongsHistory()
+	}, [token, getFeaturedSongs, getFeaturedAlbums, getSongsHistory])
 
 	useEffect(() => {
 		setFetchTrendingSongs()
@@ -43,7 +44,7 @@ const HomePage = () => {
 		setFetchAlbums()
 	}, [setFetchTrendingSongs, setFetchAlbums, setFetchMadeForYouSongs])
 
-	console.log('albums', featuredAlbums)
+	console.log('History', history)
 
 	return (
 		<section className="h-screen w-full px-6">

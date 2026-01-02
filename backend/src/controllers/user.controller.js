@@ -112,3 +112,54 @@ export const toggleFeaturesAlbums = async (req, res) => {
 		res.status(500).json({ message: "Server error", error: error.message })
 	}
 }
+
+export const getUsersHistory = async (req, res) => {
+	const currentUserId = req.auth().userId
+	try {
+		const user = await User.findOne({ clerkId: currentUserId }).select("history").populate("history")
+
+		if (!user) {
+			return res.status(404).json({ message: "No history found" })
+		}
+
+		res.status(200).json(user.history)
+	} catch (error) {
+		console.error("Error fetching history:", error)
+		res.status(500).json({ message: "Server error", error: error.message })
+	}
+}
+
+export const addToHistory = async (req, res) => {
+	const currentUserId = req.auth().userId
+
+	const { songId } = req.body
+
+	try {
+		const user = await User.findOne({ clerkId: currentUserId })
+
+		const song = await Song.findById(songId)
+
+		if (!song) {
+			return res.status(404).json({ message: "Song not found" })
+		}
+
+		if (!user) {
+			return res.status(404).json({ message: "User not found" })
+		}
+
+		user.history = user.history.filter((s) => s.toString() !== songId)
+
+		user.history.unshift(songId)
+
+		if (user.history.length > 200) {
+			user.history.pop()
+		}
+
+		await user.save()
+
+		res.status(200).json(user.history)
+	} catch (error) {
+		console.error("Error adding to history:", error)
+		res.status(500).json({ message: "Server error", error: error.message })
+	}
+}

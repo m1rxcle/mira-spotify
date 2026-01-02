@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema(
 				ref: "Album",
 			},
 		],
+		history: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Song",
+			},
+		],
 	},
 	{ timestamps: true }
 )

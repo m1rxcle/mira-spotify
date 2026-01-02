@@ -1,13 +1,21 @@
 import React, { useEffect } from 'react'
 
 import { usePlayerStore } from '@/store/use-player-store'
+import { useUserStore } from '@/store/use-user-store'
 
 const AudioPlayer = () => {
 	const audioRef = React.useRef<HTMLAudioElement>(null)
 	const prevSongRef = React.useRef<string | null>(null)
 
-	const { currentSong, isPlaying, volume, setChangeVolume, setTimeLeft, playNextSong } =
-		usePlayerStore()
+	const {
+		currentSong,
+		isPlaying,
+		volume,
+		setChangeVolume,
+		setTimeLeft,
+		setDuration,
+		playNextSong,
+	} = usePlayerStore()
 
 	useEffect(() => {
 		if (isPlaying) audioRef.current?.play()
@@ -47,13 +55,27 @@ const AudioPlayer = () => {
 		const handleTimeUpdate = () => {
 			const duration = audio.duration ?? 0
 			const currentTime = audio.currentTime
-			const time = (duration || 0) - currentTime
+			const playedSeconds = currentTime
 
-			setTimeLeft(time)
+			setTimeLeft(duration - currentTime)
+			setDuration(duration)
+
+			const { currentSong, hasReportedPlay } = usePlayerStore.getState()
+			const { addSongToHistory } = useUserStore.getState()
+
+			if (currentSong && !hasReportedPlay && playedSeconds >= 5) {
+				addSongToHistory(currentSong._id)
+				usePlayerStore.setState({ hasReportedPlay: true })
+			}
 		}
 		audio.addEventListener('timeupdate', handleTimeUpdate)
 		return () => audio.removeEventListener('timeupdate', handleTimeUpdate)
-	}, [setTimeLeft])
+	}, [setTimeLeft, setDuration])
+
+	useEffect(() => {
+		if (!currentSong) return
+		usePlayerStore.setState({ hasReportedPlay: false })
+	}, [currentSong])
 
 	useEffect(() => {
 		if (!audioRef.current) return

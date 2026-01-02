@@ -11,6 +11,7 @@ import { ScrollArea } from './components/ui/scroll-area'
 import { useInitUseR } from './hooks/use-init-user'
 import AlbumPage from './pages/album/album-page'
 import AuthCallbackPage from './pages/auth-callback/auth-callback-page'
+import HistoryPage from './pages/history/history-page'
 import HomePage from './pages/home-page'
 import { FeaturesPage } from './pages/library/features-page'
 import SearchPage from './pages/search/search-page'
@@ -64,6 +65,14 @@ function App() {
 								element={
 									<PageTransition>
 										<FeaturesPage />
+									</PageTransition>
+								}
+							/>
+							<Route
+								path="/history"
+								element={
+									<PageTransition>
+										<HistoryPage />
 									</PageTransition>
 								}
 							/>

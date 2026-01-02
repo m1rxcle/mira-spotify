@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, HistoryIcon } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -12,13 +12,15 @@ interface Props {
 
 export const CardForHistorySection: React.FC<Props> = ({ hasPreview, history }) => {
 	return (
-		<Link to="/library" className="flex flex-row justify-between items-center w-full">
+		<Link to="/history" className="flex flex-row justify-between items-center w-full">
 			<div className="flex items-center justify-between gap-3 bg-zinc-600/30 backdrop-blur-md p-3 h-20 lg:h-25 rounded-lg w-full relative">
 				<div className="flex items-center justify-start gap-3 ">
-					<img src="/features-heart.png" className="w-15 h-15 rounded-lg object-cover" />
+					<div className="bg-zinc-700/70 p-3 rounded-lg">
+						<HistoryIcon size={40} className="object-cover" />
+					</div>
 					<div>
 						<div className="flex items-center justify-start group">
-							<h1 className="text-lg font-bold line-clamp-1">Featured Song&apos;s</h1>
+							<h1 className="text-lg font-bold line-clamp-1">History Song&apos;s</h1>
 							<ChevronRight
 								size={24}
 								className="text-gray-400 translate-y-0.4 hidden lg:inline group-hover:translate-x-2 transition-all ease-in duration-200"
@@ -28,7 +30,7 @@ export const CardForHistorySection: React.FC<Props> = ({ hasPreview, history }) 
 							<p className="text-md text-gray-400 leading-4 line-clamp-1">
 								{history.map((song, index) => {
 									if (index > 2) return
-									return <span>{index === 2 ? song.title : song.title + ' ,'}</span>
+									return <span>{index === 2 ? song.title : song.title + ','}</span>
 								})}
 							</p>
 						</div>

@@ -8,6 +8,8 @@ type PlayerStore = {
 	currentSong: Song | null
 
 	isPlaying: boolean
+	hasReportedPlay: boolean
+	duration: number
 
 	queue: Song[]
 
@@ -18,6 +20,8 @@ type PlayerStore = {
 	changeColors: string
 
 	volume: number[]
+
+	setDuration: (duration: number) => void
 
 	setChangeVolume: (volume: number[]) => void
 
@@ -39,10 +43,16 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 	currentSong: null,
 	currentIndex: -1,
 	isPlaying: false,
+	hasReportedPlay: false,
+	duration: 0,
 	queue: [],
 
 	setChangeVolume: (volume: number[]) => {
 		set({ volume: volume })
+	},
+
+	setDuration: (duration: number) => {
+		set({ duration: duration })
 	},
 
 	setTimeLeft: (time: number) => {
@@ -72,6 +82,7 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 	setCurrentSong: (song: Song | null) => {
 		if (!song) return
 		const songIndex = get().queue.findIndex((s) => s._id === song._id)
+
 		set({
 			currentSong: song,
 			currentIndex: songIndex !== -1 ? songIndex : get().currentIndex,

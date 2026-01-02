@@ -9,11 +9,15 @@ type UserStore = {
 	search: Song[]
 	featuredSongs: Song[]
 	featuredAlbums: Album[]
+	history: Song[]
 	message: string
 	isLoading: boolean
 	hasSearched: boolean
 
 	setToken: (token: string | null) => void
+
+	addSongToHistory: (songId: string) => void
+	getSongsHistory: () => void
 
 	setSearch: (query: string) => void
 
@@ -31,9 +35,51 @@ export const useUserStore = create<UserStore>()((set, get) => ({
 	featuredSongs: [],
 	featuredAlbums: [],
 	message: '',
-
+	history: [],
 	isLoading: false,
 	hasSearched: false,
+
+	getSongsHistory: async () => {
+		const token = get().token
+
+		if (!token) {
+			return
+		}
+
+		try {
+			const response = await axiosInstance.get('/users/history', {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			set({ history: response.data })
+		} catch (error) {
+			console.log('Error fetching songs in store', error)
+		}
+	},
+
+	addSongToHistory: async (songId: string) => {
+		const token = get().token
+
+		if (!token) {
+			return
+		}
+
+		try {
+			await axiosInstance.post(
+				'/users/history',
+				{ songId },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+			await get().getSongsHistory()
+		} catch (error) {
+			console.log('Error fetching songs in store', error)
+		}
+	},
 
 	setToken: (token: string | null) => {
 		set({ token })

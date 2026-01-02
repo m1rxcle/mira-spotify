@@ -4,7 +4,6 @@ import React from 'react'
 
 import type { Song } from '@/types'
 
-
 interface Props {
 	message: string
 	showMessage: boolean
@@ -23,7 +22,6 @@ export const AnimatedMessageForSongs: React.FC<Props> = ({
 			{showMessage && (
 				<>
 					<motion.div
-						key="message"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: 20 }}
@@ -46,7 +44,6 @@ export const AnimatedMessageForSongs: React.FC<Props> = ({
 					</motion.div>
 
 					<motion.div
-						key="message"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: 20 }}

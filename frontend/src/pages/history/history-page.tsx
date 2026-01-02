@@ -1,41 +1,38 @@
 import { useUser } from '@clerk/clerk-react'
 import { RiPauseMiniFill, RiPlayMiniFill } from '@remixicon/react'
+import { HistoryIcon } from 'lucide-react'
 import { useEffect } from 'react'
 
-import { RenderFeaturedAlbums } from '@/components/albums/render-featured-albums'
 import { Footer } from '@/components/footer'
 import { NotFoundFeatures } from '@/components/not-found/not-found-features'
 import FeaturesSongsSkeleton from '@/components/skeletons/features-songs-skeleton'
 import RenderSongs from '@/components/songs/render-songs'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { usePlayerStore } from '@/store/use-player-store'
 import { useUserStore } from '@/store/use-user-store'
 
-export const FeaturesPage = () => {
-	const { token, featuredSongs, isLoading, featuredAlbums, getFeaturedSongs, getFeaturedAlbums } =
-		useUserStore()
+export const HistoryPage = () => {
+	const { token, history, getSongsHistory } = useUserStore()
 	const { currentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore()
 
 	const { user } = useUser()
 
 	const handlePlayAlbumButton = () => {
-		if (!featuredSongs) return
-		const isCurrentAlbumPlaying = featuredSongs.some((song) => song._id === currentSong?._id)
+		if (!history) return
+		const isCurrentAlbumPlaying = history.some((song) => song._id === currentSong?._id)
 		if (isCurrentAlbumPlaying) togglePlay()
 		else {
-			playAlbum(featuredSongs)
+			playAlbum(history)
 		}
 	}
 
 	useEffect(() => {
 		if (!token) return
-		getFeaturedSongs()
-		getFeaturedAlbums()
-	}, [getFeaturedSongs, getFeaturedAlbums, token])
+		getSongsHistory()
+	}, [getSongsHistory, token])
 
-	if (!featuredSongs || isLoading || !token) return <FeaturesSongsSkeleton />
+	if (!history || !token) return <FeaturesSongsSkeleton />
 
-	if (featuredSongs.length === 0) {
+	if (history.length === 0) {
 		return <NotFoundFeatures />
 	}
 
@@ -46,15 +43,13 @@ export const FeaturesPage = () => {
 				<div className="flex flex-col items-start gap-15 px-6 pt-5 md:pt-16">
 					<div className="flex md:flex-row flex-col items-center w-full justify-start gap-5 ">
 						<h3 className="text-gray-400 md:hidden">Playlist</h3>
-						<img
-							src="/features-heart-big.png"
-							alt="features"
-							className="w-55 h-55 rounded-lg object-cover"
-						/>
+						<div className="bg-zinc-700/70 p-3 rounded-lg">
+							<HistoryIcon className="object-cover w-55 h-55" />
+						</div>
 						<div className="flex flex-col gap-8">
 							<div className="flex flex-col items-start justify-start ">
 								<h3 className="text-gray-400 hidden md:inline">Playlist</h3>
-								<h1 className="text-5xl font-extrabold text-center ">Featured Songs</h1>
+								<h1 className="text-5xl font-extrabold text-center ">Your History</h1>
 							</div>
 							<div className="flex items-center md:items-start md:justify-start justify-center gap-2">
 								<p className="text-gray-400">{user?.fullName}</p>
@@ -64,7 +59,7 @@ export const FeaturesPage = () => {
 									onClick={handlePlayAlbumButton}
 									className="bg-emerald-500 p-2 cursor-pointer rounded-full flex items-center justify-center hover:scale-110 transition-all ease-in-out duration-300"
 								>
-									{isPlaying && featuredSongs ? (
+									{isPlaying && history ? (
 										<RiPauseMiniFill
 											size={40}
 											className="text-black transition-all ease-in-out duration-300"
@@ -80,32 +75,9 @@ export const FeaturesPage = () => {
 						</div>
 					</div>
 					<div className="w-full">
-						<Tabs defaultValue="songs">
-							<TabsList className="w-full md:w-100 transition-all ease-in-out duration-300 ">
-								<TabsTrigger
-									value="songs"
-									className="border-none text-md font-semibold transition-all ease-in-out duration-300 cursor-pointer"
-								>
-									Songs
-								</TabsTrigger>
-								<TabsTrigger
-									value="albums"
-									className="border-none text-md font-semibold transition-all ease-in-out duration-300  cursor-pointer"
-								>
-									Albums
-								</TabsTrigger>
-							</TabsList>
-							<TabsContent value="songs">
-								<div className="w-full mt-10">
-									<RenderSongs songs={featuredSongs} className="flex flex-col" />
-								</div>
-							</TabsContent>
-							<TabsContent value="albums">
-								<div className="w-full mt-10">
-									<RenderFeaturedAlbums albums={featuredAlbums} />
-								</div>
-							</TabsContent>
-						</Tabs>
+						<div className="w-full mt-10">
+							<RenderSongs songs={history} className="flex flex-col" />
+						</div>
 					</div>
 					<Footer />
 				</div>
@@ -113,3 +85,5 @@ export const FeaturesPage = () => {
 		</div>
 	)
 }
+
+export default HistoryPage
