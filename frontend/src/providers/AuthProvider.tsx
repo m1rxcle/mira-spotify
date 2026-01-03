@@ -1,8 +1,8 @@
 import { useAuth } from '@clerk/clerk-react'
 import React from 'react'
 
-import { axiosInstance } from '@/lib/axios'
-import { useAdminStore } from '@/store/use-admin-store'
+import { axiosInstance } from '@/shared/lib/axios'
+import { useAdminStore } from '@/shared/store/use-admin-store'
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const { getToken } = useAuth()

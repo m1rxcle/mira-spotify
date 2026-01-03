@@ -1,90 +1,83 @@
 import { AuthenticateWithRedirectCallback } from '@clerk/clerk-react'
-import { AnimatePresence } from 'framer-motion'
 import { Route, Routes, useLocation } from 'react-router-dom'
 
-import { PageTransition } from './animations/page-transition'
-import AudioPlayer from './components/audio-player'
-import MusicPlayer from './components/music-player/music-player'
-import { GlobalNotFound } from './components/not-found/global-not-found'
-import SideBar from './components/side-bar'
-import { ScrollArea } from './components/ui/scroll-area'
-import { useInitUseR } from './hooks/use-init-user'
-import AlbumPage from './pages/album/album-page'
-import AuthCallbackPage from './pages/auth-callback/auth-callback-page'
-import HistoryPage from './pages/history/history-page'
-import HomePage from './pages/home-page'
-import { FeaturesPage } from './pages/library/features-page'
-import SearchPage from './pages/search/search-page'
+import { AdminLayout } from './layouts/admin-layout'
+import { UserLayout } from './layouts/user-layout'
+import { PageTransition } from './shared/animations/page-transition'
+import { GlobalNotFound } from './shared/components/not-found/global-not-found'
+import { useInitUseR } from './shared/hooks/use-init-user'
+import { CreateAlbumPage } from './shared/pages/admin/create-album/create-album-page'
+import { CreateSongPage } from './shared/pages/admin/create-song/create-song-page'
+import { StatsPage } from './shared/pages/admin/stats/stats-page'
+import { UsersPage } from './shared/pages/admin/users/users-page'
+import AlbumPage from './shared/pages/user/album/album-page'
+import AuthCallbackPage from './shared/pages/user/auth-callback/auth-callback-page'
+import HistoryPage from './shared/pages/user/history/history-page'
+import HomePage from './shared/pages/user/home-page'
+import { FeaturesPage } from './shared/pages/user/library/features-page'
+import SearchPage from './shared/pages/user/search/search-page'
 
 function App() {
 	const location = useLocation()
 
 	useInitUseR()
 	return (
-		<div className="h-screen flex md:flex-row flex-col-reverse">
-			<SideBar />
-
-			<div className="bg-black flex-1 flex flex-col min-h-0 md:gap-6 gap-1 md:pt-4 pb-4 md:px-4 px-1 ">
-				<ScrollArea className="flex-1 md:rounded-3xl rounded-lg min-h-0  overflow-x-hidden  bg-zinc-900/60 border border-gray-400/15 z-50 relative">
-					<AnimatePresence mode="wait">
-						<Routes location={location} key={location.pathname}>
-							<Route
-								path="/sso-callback"
-								element={
-									<AuthenticateWithRedirectCallback signInForceRedirectUrl={'/auth-callback'} />
-								}
-							/>
-							<Route path="/auth-callback" element={<AuthCallbackPage />} />
-							<Route path="*" element={<GlobalNotFound />} />
-							<Route
-								path="/"
-								element={
-									<PageTransition>
-										<HomePage />
-									</PageTransition>
-								}
-							/>
-							<Route
-								path="/album/:albumId"
-								element={
-									<PageTransition>
-										<AlbumPage />
-									</PageTransition>
-								}
-							/>
-							<Route
-								path="/search"
-								element={
-									<PageTransition>
-										<SearchPage />
-									</PageTransition>
-								}
-							/>
-							<Route
-								path="/library"
-								element={
-									<PageTransition>
-										<FeaturesPage />
-									</PageTransition>
-								}
-							/>
-							<Route
-								path="/history"
-								element={
-									<PageTransition>
-										<HistoryPage />
-									</PageTransition>
-								}
-							/>
-						</Routes>
-					</AnimatePresence>
-				</ScrollArea>
-				<div>
-					<AudioPlayer />
-					<MusicPlayer />
-				</div>
-			</div>
-		</div>
+		<Routes location={location} key={location.pathname}>
+			<Route element={<UserLayout />}>
+				<Route
+					path="/sso-callback"
+					element={<AuthenticateWithRedirectCallback signInForceRedirectUrl={'/auth-callback'} />}
+				/>
+				<Route path="/auth-callback" element={<AuthCallbackPage />} />
+				<Route path="*" element={<GlobalNotFound />} />
+				<Route
+					path="/"
+					element={
+						<PageTransition>
+							<HomePage />
+						</PageTransition>
+					}
+				/>
+				<Route
+					path="/album/:albumId"
+					element={
+						<PageTransition>
+							<AlbumPage />
+						</PageTransition>
+					}
+				/>
+				<Route
+					path="/search"
+					element={
+						<PageTransition>
+							<SearchPage />
+						</PageTransition>
+					}
+				/>
+				<Route
+					path="/library"
+					element={
+						<PageTransition>
+							<FeaturesPage />
+						</PageTransition>
+					}
+				/>
+				<Route
+					path="/history"
+					element={
+						<PageTransition>
+							<HistoryPage />
+						</PageTransition>
+					}
+				/>
+			</Route>
+			<Route element={<AdminLayout />}>
+				<Route path="/admin" element={<StatsPage />} />
+				<Route path="/admin/songs" element={<CreateSongPage />} />
+				<Route path="/admin/albums" element={<CreateAlbumPage />} />
+				<Route path="/admin/users" element={<UsersPage />} />
+			</Route>
+		</Routes>
 	)
 }
 
