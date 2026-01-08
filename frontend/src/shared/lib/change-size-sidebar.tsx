@@ -1,9 +1,17 @@
 import { RiArrowDropLeftLine, RiArrowDropRightLine } from '@remixicon/react'
 
-import { useMusicStore } from '@/shared/store/use-music-store'
+import {
+	useChangeArrow,
+	useCollapsed,
+	useSetChangeArrow,
+	useSetCollapsed,
+} from '../store/use-music-store'
 
 const ChangeSizeSideBar = () => {
-	const { changeArrow, setChangeArrow, collapsed, setCollapsed } = useMusicStore()
+	const changeArrow = useChangeArrow()
+	const setChangeArrow = useSetChangeArrow()
+	const collapsed = useCollapsed()
+	const setCollapsed = useSetCollapsed()
 
 	const changeSizeHandler = () => {
 		setChangeArrow(!changeArrow)

@@ -7,15 +7,24 @@ import { SearchSkeleton } from '@/shared/components/skeletons/search-skeleton'
 import { Input } from '@/shared/components/ui/input'
 import RenderSongs from '@/shared/components/user/songs/render-songs'
 import { cn } from '@/shared/lib/utils'
-import { useUserStore } from '@/shared/store/use-user-store'
+import {
+	useHasSearched,
+	useIsLoadingForSearchSong,
+	useSearch,
+	useSetSearch,
+} from '@/shared/store/use-user-store'
 
 const SearchPage = () => {
 	const [searchQuery, setSearchQuery] = React.useState('')
 	const [focused, setFocused] = React.useState(false)
-
-	const { search, isLoading, hasSearched, setSearch } = useUserStore()
 	const [, setSearchParams] = useSearchParams()
 	const searchRef = React.useRef(null)
+
+	const search = useSearch()
+	const isLoadingForSearchSong = useIsLoadingForSearchSong()
+	const hasSearched = useHasSearched()
+
+	const setSearch = useSetSearch()
 
 	useClickAway(searchRef, () => {
 		setFocused(false)
@@ -67,11 +76,11 @@ const SearchPage = () => {
 			</div>
 
 			<div className="mb-20">
-				{isLoading && <SearchSkeleton />}
-				{!isLoading && search.length > 0 && (
+				{isLoadingForSearchSong && <SearchSkeleton />}
+				{!isLoadingForSearchSong && search.length > 0 && (
 					<RenderSongs className="mt-10 flex flex-col gap-2" songs={search} />
 				)}
-				{!isLoading && hasSearched && search.length === 0 && (
+				{!isLoadingForSearchSong && hasSearched && search.length === 0 && (
 					<div className="flex flex-col justify-center items-center mt-20">
 						<Search size={40} className="mb-10 text-gray-500" />
 
@@ -81,7 +90,7 @@ const SearchPage = () => {
 				)}
 			</div>
 			<div>
-				{!isLoading && !hasSearched && (
+				{!isLoadingForSearchSong && !hasSearched && (
 					<div className="flex flex-col justify-center items-center mt-20">
 						<h1 className="text-xl md:text-3xl font-bold bg-linear-to-r from-emerald-400 via-green-600 to-emerald-400 bg-clip-text text-transparent">
 							Try to search for a song or artist{' '}

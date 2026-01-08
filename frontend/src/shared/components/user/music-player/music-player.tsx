@@ -1,91 +1,51 @@
-import { useClickAway } from '@reactuses/core'
-import {
-	RiArrowGoBackLine,
-	RiArrowUpDownLine,
-	RiPauseMiniLine,
-	RiPlayFill,
-	RiSkipLeftLine,
-	RiSkipRightLine,
-	RiVolumeDownLine,
-} from '@remixicon/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 
-import { AnimatedMessageForSongs } from './animated-message-for-songs'
-import ChangeVolumeBlock from './change-volume-block'
+import { MobilePlayerControls } from './mobile-player-controls'
+import { MobilePlayerInfo } from './mobile-player-info'
+import { MobilePlayerProgress } from './mobile-player-progress'
+import { PlayerControls } from './player-controls'
+import { PlayerInfo } from './player-info'
+import { PlayerProgress } from './player-progress'
+import { PlayerSlider } from './player-slider'
+import { PlayerToggleFeaturesMessage } from './player-toggle-features-message'
+import { PlayerVolume } from './player-volume'
 import MusicPlayerSkeleton from '../../skeletons/music-player-skeleton'
-import AddToFavorite from '../songs/add-to-favorite-button'
 
 import { cn } from '@/shared/lib/utils'
-import { useMusicStore } from '@/shared/store/use-music-store'
-import { usePlayerStore } from '@/shared/store/use-player-store'
-import { useUserStore } from '@/shared/store/use-user-store'
+import { useIsLoadingAlbums } from '@/shared/store/use-music-store'
+import {
+	usePlayerChangeColors,
+	usePlayerCurrentSong,
+	usePlayerHandleSetCurrentSong,
+} from '@/shared/store/use-player-store'
+import { useGetSongsHistory, useHistory, useToken } from '@/shared/store/use-user-store'
 
 const MusicPlayer = () => {
-	const [openVolume, setOpenVolume] = useState(false)
-	const [showMessage, setShowMessage] = useState(false)
+	const history = useHistory()
+	const token = useToken()
+	const isLoadingAlbums = useIsLoadingAlbums()
+	const currentSong = usePlayerCurrentSong()
+	const changeColors = usePlayerChangeColors()
 
-	const volumeRef = useRef<HTMLDivElement>(null)
-	useClickAway(volumeRef, () => setOpenVolume(false))
-
-	const { isLoading } = useMusicStore()
-	const { featuredSongs, message, history, toggleFeaturedSongs } = useUserStore()
-	const {
-		currentSong,
-		isPlaying,
-		changeColors,
-		timeLeft,
-		togglePlay,
-		handleSetCurrentSong,
-		playNextSong,
-		playPreviousSong,
-	} = usePlayerStore()
-
-	const backToPrevSong = () => {
-		playPreviousSong()
-	}
-
-	const skipMusicHandler = () => {
-		playNextSong()
-	}
-
-	const handlePlayMusic = () => {
-		togglePlay()
-	}
+	const getSongsHistory = useGetSongsHistory()
+	const handleSetCurrentSong = usePlayerHandleSetCurrentSong()
 
 	useEffect(() => {
-		if (!message) return
+		if (!token) return
 
-		setShowMessage(true)
+		if (history.length === 0) {
+			getSongsHistory()
+			return
+		}
 
-		const timer = setTimeout(() => {
-			setShowMessage(false)
-		}, 3000)
-
-		return () => clearTimeout(timer)
-	}, [message])
-
-	useEffect(() => {
 		if (!currentSong && history.length > 0) {
 			handleSetCurrentSong(history[0])
 		}
-	}, [history])
+	}, [token, history, currentSong, getSongsHistory, handleSetCurrentSong])
 
-	if (isLoading || !currentSong) {
+	if (isLoadingAlbums || !currentSong) {
 		return <MusicPlayerSkeleton />
 	}
-
-	let progress = 0
-	if (timeLeft <= 0) {
-		progress = 0
-	} else if (timeLeft > currentSong.duration) {
-		progress = 0
-	} else if (currentSong.duration === 0) {
-		progress = 0
-	} else {
-		progress = Math.round(((currentSong.duration - timeLeft) / currentSong.duration) * 100)
-	}
-
-	const isFeatured = featuredSongs.some((featuredSong) => featuredSong._id === currentSong._id)
 
 	return (
 		<div
@@ -101,138 +61,28 @@ const MusicPlayer = () => {
 				changeColors === 'pink' && 'bg-pink-500/50',
 				changeColors === 'teal' && 'bg-teal-500/50',
 				changeColors === 'amber' && 'bg-amber-500/50',
-				'md:rounded-2xl rounded-lg md:h-22 h-16 shrink-0'
+				'md:rounded-2xl rounded-lg md:h-22 h-16  relative group'
 			)}
 		>
-			<div className="hidden md:flex justify-between items-center pl-2 pr-6 py-2 md:py-2.5 text-white/50  relative z-50">
-				<AnimatedMessageForSongs
-					showMessage={showMessage}
-					currentSong={currentSong}
-					message={message}
-					setShowMessage={setShowMessage}
-				/>
-				<div className="flex items-center justify-center gap-4">
-					<img
-						loading="lazy"
-						src={currentSong?.imageUrl}
-						alt={currentSong?.title}
-						className="w-12 h-12 md:w-16 md:h-16 rounded-md object-cover shadow-md shadow-black/50 "
-					/>
-					<div className="flex flex-col w-40  justify-center items-start">
-						<h3 className="text-white line-clamp-1">{currentSong?.title}</h3>
-						<p className="text-gray-400 line-clamp-1">{currentSong?.artist}</p>
-					</div>
-				</div>
-				<div className="flex items-center gap-10 justify-between ">
-					<div className="hover:text-white transition-colors ease-in-out duration-300">
-						<AddToFavorite
-							handleToggleFeatured={() => {
-								if (!currentSong) return
-								toggleFeaturedSongs(currentSong._id)
-							}}
-							isFeatured={isFeatured}
-							songId={currentSong?._id}
-						/>
-					</div>
-					<div className="flex items-center gap-4 justify-between cursor-pointer">
-						<div className="hover:text-white transition-colors ease-in-out duration-300">
-							<RiArrowUpDownLine size={25} />
-						</div>
-						<div
-							onClick={backToPrevSong}
-							className="hover:text-white hover:scale-110 transition-all  ease-in-out duration-300"
-						>
-							<RiSkipLeftLine size={25} />
-						</div>
-						<div
-							onClick={handlePlayMusic}
-							className="bg-[#12c74b] rounded-full p-1.5 hover:scale-105 transition-all  ease-in-out duration-300"
-						>
-							{isPlaying ? (
-								<RiPauseMiniLine className="text-black/70" size={30} />
-							) : (
-								<RiPlayFill className="text-black/70" size={30} />
-							)}
-						</div>
-						<div
-							onClick={skipMusicHandler}
-							className="hover:text-white hover:scale-110 transition-all  ease-in-out duration-300"
-						>
-							<RiSkipRightLine size={25} />
-						</div>
-						<div className="hover:text-white transition-colors ease-in-out duration-300">
-							<RiArrowGoBackLine size={25} />
-						</div>
-					</div>
-				</div>
-				<div
-					ref={volumeRef}
-					className="flex gap-8 items-center hover:text-white transition-colors ease-in-out duration-300 relative cursor-pointer"
-				>
-					<RiVolumeDownLine onClick={() => setOpenVolume(!openVolume)} size={25} />
-					<div className="absolute -top-45 -left-2">
-						<ChangeVolumeBlock isOpenVolume={openVolume} />
-					</div>
-				</div>
+			<div className="absolute left-0 -top-3  w-full -z-10 h-full bg-transparent rounded-full overflow-hidden hidden md:block">
+				<PlayerSlider currentSong={currentSong} />
+			</div>
 
-				<div
-					style={{
-						width: `${progress}%`,
-					}}
-					className={`smooth-progress -z-50 absolute -bottom-0.5 left-0 h-full bg-gray-500/50 rounded-lg rounded-tr-none rounded-br-none  pl-2 pr-6 py-2 md:py-2.5 pointer-events-none `}
-				></div>
+			<div className="hidden md:flex justify-between items-center  pl-2 pr-6 py-2 md:py-2.5 text-white/50  relative z-20">
+				<PlayerToggleFeaturesMessage currentSong={currentSong} />
+				<PlayerInfo currentSong={currentSong} />
+				<PlayerControls currentSong={currentSong} />
+				<PlayerProgress currentSong={currentSong} />
+				<PlayerVolume />
 			</div>
 
 			{/* mobile */}
 
 			<div className="relative flex justify-between items-center px-2 py-2 md:hidden z-50 ">
-				<AnimatedMessageForSongs
-					currentSong={currentSong}
-					message={message}
-					setShowMessage={setShowMessage}
-					showMessage={showMessage}
-				/>
-				<div className="flex items-center gap-5">
-					<img className="w-12 h-12 rounded-md" src={currentSong?.imageUrl} />
-					<div className="flex flex-col justify-center items-start w-40">
-						<h3 className="text-white line-clamp-1">{currentSong?.title}</h3>
-						<p className="text-gray-400 line-clamp-1">{currentSong?.artist}</p>
-					</div>
-				</div>
-				<div className="flex items-center gap-2">
-					<div className="hover:text-white transition-colors ease-in-out duration-300">
-						<AddToFavorite
-							handleToggleFeatured={() => {
-								if (!currentSong) return
-								toggleFeaturedSongs(currentSong._id)
-							}}
-							isFeatured={isFeatured}
-							songId={currentSong?._id}
-						/>
-					</div>
-					<div
-						onClick={handlePlayMusic}
-						className="cursor-pointer p-1.5 hover:scale-110  transition-all  ease-in-out duration-300"
-					>
-						{isPlaying ? (
-							<RiPauseMiniLine className="text-gray-400 hover:text-black" size={30} />
-						) : (
-							<RiPlayFill className=" hover:text-black text-gray-400" size={30} />
-						)}
-					</div>
-					<div onClick={skipMusicHandler}>
-						<RiSkipRightLine
-							size={30}
-							className="cursor-pointer text-gray-500 hover:text-white hover:scale-110 transition-all  ease-in-out duration-300"
-						/>
-					</div>
-				</div>
-				<div
-					style={{
-						width: `${progress}%`,
-					}}
-					className={`smooth-progress rounded-2xl rounded-tr-none rounded-br-none -z-50 absolute bottom-0 left-0  h-full bg-gray-500/50 flex justify-between items-center px-2 py-2 md:hidden pointer-events-none `}
-				></div>
+				<PlayerToggleFeaturesMessage currentSong={currentSong} />
+				<MobilePlayerInfo currentSong={currentSong} />
+				<MobilePlayerControls currentSong={currentSong} />
+				<MobilePlayerProgress currentSong={currentSong} />
 			</div>
 		</div>
 	)

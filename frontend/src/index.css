@@ -120,6 +120,14 @@
 	body {
 		@apply bg-background  text-foreground;
 	}
+	time-slider {
+		slider-thumb {
+			opacity: 0;
+		}
+		slider-range {
+			opacity: 0;
+		}
+	}
 }
 
 /* кастомный скролл */
@@ -259,4 +267,38 @@
 
 .smooth-progress {
 	transition: width 0.7s linear;
+}
+
+.my-music-slider {
+	height: 20px; /* достаточная высота для thumb */
+	width: 100%;
+	position: relative;
+	display: flex;
+	align-items: center; /* центрирование track и thumb */
+}
+
+.my-music-slider [data-slot='slider-track'] {
+	background-color: #464646;
+	height: 5px;
+
+	border-radius: 8px; /* скругление концов */
+	position: relative;
+}
+
+.my-music-slider [data-slot='slider-range'] {
+	background-color: rgba(64, 255, 144, 0.986);
+	height: 100%;
+	border-radius: 8px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.my-music-slider [data-slot='slider-thumb'] {
+	width: 14px;
+	height: 14px;
+	background-color: rgba(64, 255, 144, 0.986);
+	border-radius: 50%;
+	position: relative;
+	cursor: pointer;
 }

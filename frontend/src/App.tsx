@@ -15,14 +15,14 @@ import AuthCallbackPage from './shared/pages/user/auth-callback/auth-callback-pa
 import HistoryPage from './shared/pages/user/history/history-page'
 import HomePage from './shared/pages/user/home-page'
 import { FeaturesPage } from './shared/pages/user/library/features-page'
+import { ProfilePage } from './shared/pages/user/profile/profile-page'
 import SearchPage from './shared/pages/user/search/search-page'
 
 function App() {
-	const location = useLocation()
-
 	useInitUseR()
+	const location = useLocation()
 	return (
-		<Routes location={location} key={location.pathname}>
+		<Routes location={location}>
 			<Route element={<UserLayout />}>
 				<Route
 					path="/sso-callback"
@@ -70,9 +70,17 @@ function App() {
 						</PageTransition>
 					}
 				/>
+				<Route
+					path="/profile"
+					element={
+						<PageTransition>
+							<ProfilePage />
+						</PageTransition>
+					}
+				/>
 			</Route>
 			<Route element={<AdminLayout />}>
-				<Route path="/admin" element={<StatsPage />} />
+				<Route path="/admin/dashboard" element={<StatsPage />} />
 				<Route path="/admin/songs" element={<CreateSongPage />} />
 				<Route path="/admin/albums" element={<CreateAlbumPage />} />
 				<Route path="/admin/users" element={<UsersPage />} />

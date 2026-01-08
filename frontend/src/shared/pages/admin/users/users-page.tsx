@@ -5,5 +5,9 @@ interface Props {
 }
 
 export const UsersPage: React.FC<Props> = ({ className }) => {
-	return <div className={className}></div>
+	return (
+		<div className={className}>
+			<h1>333333333333333333333333</h1>
+		</div>
+	)
 }

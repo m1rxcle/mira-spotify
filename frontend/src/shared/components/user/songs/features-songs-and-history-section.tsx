@@ -1,10 +1,12 @@
 import { CardForFeaturesSection } from './card-for-features-section'
 import { CardForHistorySection } from './card-for-history-section'
 
-import { useUserStore } from '@/shared/store/use-user-store'
+import { useFeaturedSongs, useHistory } from '@/shared/store/use-user-store'
 
 const FeaturesSongsAndHistorySection = () => {
-	const { featuredSongs, history } = useUserStore()
+	const featuredSongs = useFeaturedSongs()
+	const history = useHistory()
+
 	if (featuredSongs.length === 0) return null
 	if (history.length === 0) return null
 

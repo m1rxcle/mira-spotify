@@ -74,7 +74,7 @@ export const SongTemplate: React.FC<Props> = ({
 						songId={song._id}
 					/>
 
-					<p className="text-gray-400 font-semibold">
+					<p className="text-gray-400 font-semibold w-10 h-8 flex items-center justify-center">
 						{isCurrentSong && isPlaying
 							? formatDuration(timeLeft || song.duration)
 							: formatDuration(song.duration)}

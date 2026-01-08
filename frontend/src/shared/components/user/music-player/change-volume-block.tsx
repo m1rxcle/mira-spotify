@@ -1,14 +1,15 @@
 import { Slider } from '../../ui/slider'
 
 import { cn } from '@/shared/lib/utils'
-import { usePlayerStore } from '@/shared/store/use-player-store'
+import { usePlayerChangeVolume, usePlayerVolume } from '@/shared/store/use-player-store'
 
 interface ChangeVolumeBlockProps {
 	isOpenVolume: boolean
 }
 
 const ChangeVolumeBlock = ({ isOpenVolume }: ChangeVolumeBlockProps) => {
-	const { volume, setChangeVolume } = usePlayerStore()
+	const volume = usePlayerVolume()
+	const setChangeVolume = usePlayerChangeVolume()
 
 	return (
 		<div

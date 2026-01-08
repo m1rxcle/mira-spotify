@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom'
 import InteractiveButtonsOnAlbum from './interactive-buttons-on-album'
 import AlbumsSkeleton from '../../skeletons/albums-skeleton'
 
-import { useUserStore } from '@/shared/store/use-user-store'
+import { useFeaturedAlbums, useToggleFeaturedAlbums } from '@/shared/store/use-user-store'
 import type { Album } from '@/types'
 
 const AlbumsSection = ({ albums, isLoading }: { albums: Album[]; isLoading: boolean }) => {
-	const { featuredAlbums, toggleFeaturedAlbums } = useUserStore()
+	const featuredAlbums = useFeaturedAlbums()
+	const toggleFeaturedAlbums = useToggleFeaturedAlbums()
 
 	if (!albums || isLoading) {
 		return <AlbumsSkeleton />

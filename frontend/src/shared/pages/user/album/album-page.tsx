@@ -4,16 +4,40 @@ import { useParams } from 'react-router-dom'
 
 import CurrentAlbumSkeleton from '@/shared/components/skeletons/current-album-skeleton'
 import RenderSongs from '@/shared/components/user/songs/render-songs'
-import { useMusicStore } from '@/shared/store/use-music-store'
-import { usePlayerStore } from '@/shared/store/use-player-store'
-import { useUserStore } from '@/shared/store/use-user-store'
+import {
+	useCurrentAlbum,
+	useIsLoadingCurrentAlbum,
+	useSetFetchAlbumById,
+} from '@/shared/store/use-music-store'
+import {
+	usePlayerCurrentSong,
+	usePlayerIsPlaying,
+	usePlayerPlayAlbum,
+	usePlayerTogglePlay,
+} from '@/shared/store/use-player-store'
+import {
+	useFeaturedAlbums,
+	useGetFeaturedAlbums,
+	useToggleFeaturedAlbums,
+	useToken,
+} from '@/shared/store/use-user-store'
 
 const AlbumPage = () => {
 	const { albumId } = useParams()
 
-	const { currentAlbum, isLoading, setFetchAlbumById } = useMusicStore()
-	const { currentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore()
-	const { token, featuredAlbums, toggleFeaturedAlbums, getFeaturedAlbums } = useUserStore()
+	// store
+	const currentAlbum = useCurrentAlbum()
+	const isLoadingCurrentAlbum = useIsLoadingCurrentAlbum()
+	const currentSong = usePlayerCurrentSong()
+	const isPlaying = usePlayerIsPlaying()
+	const token = useToken()
+	const featuredAlbums = useFeaturedAlbums()
+	//setters from store
+	const setFetchAlbumById = useSetFetchAlbumById()
+	const togglePlay = usePlayerTogglePlay()
+	const playAlbum = usePlayerPlayAlbum()
+	const toggleFeaturedAlbums = useToggleFeaturedAlbums()
+	const getFeaturedAlbums = useGetFeaturedAlbums()
 
 	useEffect(() => {
 		setFetchAlbumById(albumId || '')
@@ -32,7 +56,7 @@ const AlbumPage = () => {
 		}
 	}
 
-	if (isLoading || !currentAlbum) return <CurrentAlbumSkeleton />
+	if (isLoadingCurrentAlbum || !currentAlbum) return <CurrentAlbumSkeleton />
 
 	const isFeaturedAlbum = featuredAlbums.some(
 		(featuredAlbum) => featuredAlbum._id.toString() === currentAlbum?._id

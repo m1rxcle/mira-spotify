@@ -7,16 +7,52 @@ import FeaturesSongsSkeleton from '@/shared/components/skeletons/features-songs-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { RenderFeaturedAlbums } from '@/shared/components/user/albums/render-featured-albums'
 import { Footer } from '@/shared/components/user/footer'
+import { UnauthorizedUser } from '@/shared/components/user/profile/unauthorized-user'
 import RenderSongs from '@/shared/components/user/songs/render-songs'
-import { usePlayerStore } from '@/shared/store/use-player-store'
-import { useUserStore } from '@/shared/store/use-user-store'
+import {
+	usePlayerCurrentSong,
+	usePlayerIsPlaying,
+	usePlayerPlayAlbum,
+	usePlayerTogglePlay,
+} from '@/shared/store/use-player-store'
+import {
+	useFeaturedAlbums,
+	useFeaturedSongs,
+	useGetFeaturedAlbums,
+	useGetFeaturedSongs,
+	useIsLoadingForUserFeaturedSongs,
+	useToken,
+} from '@/shared/store/use-user-store'
 
 export const FeaturesPage = () => {
-	const { token, featuredSongs, isLoading, featuredAlbums, getFeaturedSongs, getFeaturedAlbums } =
-		useUserStore()
-	const { currentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore()
-
 	const { user } = useUser()
+
+	if (!user) return <UnauthorizedUser />
+
+	const token = useToken()
+	const featuredSongs = useFeaturedSongs()
+	const isLoadingForUserFeatured = useIsLoadingForUserFeaturedSongs()
+	const featuredAlbums = useFeaturedAlbums()
+	const isPlaying = usePlayerIsPlaying()
+	const currentSong = usePlayerCurrentSong()
+
+	const getFeaturedSongs = useGetFeaturedSongs()
+	const getFeaturedAlbums = useGetFeaturedAlbums()
+	const togglePlay = usePlayerTogglePlay()
+	const playAlbum = usePlayerPlayAlbum()
+
+	useEffect(() => {
+		if (!token) return
+		getFeaturedSongs()
+		getFeaturedAlbums()
+	}, [getFeaturedSongs, getFeaturedAlbums, token])
+
+	if (!featuredSongs || isLoadingForUserFeatured || !token || !featuredAlbums)
+		return <FeaturesSongsSkeleton />
+
+	if (featuredSongs.length === 0) {
+		return <NotFoundFeatures />
+	}
 
 	const handlePlayAlbumButton = () => {
 		if (!featuredSongs) return
@@ -25,18 +61,6 @@ export const FeaturesPage = () => {
 		else {
 			playAlbum(featuredSongs)
 		}
-	}
-
-	useEffect(() => {
-		if (!token) return
-		getFeaturedSongs()
-		getFeaturedAlbums()
-	}, [getFeaturedSongs, getFeaturedAlbums, token])
-
-	if (!featuredSongs || isLoading || !token) return <FeaturesSongsSkeleton />
-
-	if (featuredSongs.length === 0) {
-		return <NotFoundFeatures />
 	}
 
 	return (

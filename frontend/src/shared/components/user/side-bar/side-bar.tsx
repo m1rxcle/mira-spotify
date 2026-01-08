@@ -1,15 +1,23 @@
-import { SignedIn, SignedOut, SignOutButton, useUser } from '@clerk/clerk-react'
-import { RiHeart2Line, RiMusic2Line, RiSearch2Line, RiUser6Line } from '@remixicon/react'
+import { SignedOut, useUser } from '@clerk/clerk-react'
+import {
+	RiHeart2Line,
+	RiMusic2Line,
+	RiSearch2Line,
+	RiUser3Line,
+	RiUser6Line,
+} from '@remixicon/react'
 import { motion } from 'framer-motion'
 import { LayoutDashboardIcon } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 
 import SingInOAuthButtons from '../sign-in-OAuth-buttons'
+import { HoverPopoverSideBar } from './hover-popover-side-bar'
+import { ProfileImage } from '../profile/profile-image'
 
 import ChangeSizeSideBar from '@/shared/lib/change-size-sidebar'
 import { cn } from '@/shared/lib/utils'
 import { useAdminStore } from '@/shared/store/use-admin-store'
-import { useMusicStore } from '@/shared/store/use-music-store'
+import { useCollapsed } from '@/shared/store/use-music-store'
 
 const NAV_ITEMS = [
 	{
@@ -35,7 +43,7 @@ const NAV_ITEMS = [
 ]
 
 const SideBar = () => {
-	const { collapsed } = useMusicStore()
+	const collapsed = useCollapsed()
 	const { isAdmin } = useAdminStore()
 
 	const data = useUser()
@@ -46,7 +54,7 @@ const SideBar = () => {
 			<aside
 				className={cn(
 					collapsed ? 'w-24' : 'md:w-24 lg:w-56',
-					`hidden md:flex md:flex-col md:items-center md:py-8 md:px-4 md:justify-between md:h-screen md:bg-black md:backdrop-blur-md md:z-10 transition-all duration-300 ease-in-out`
+					`hidden md:flex md:flex-col md:items-center md:py-8 md:px-4 md:justify-between md:h-screen md:bg-black md:backdrop-blur-md md:z-10 transition-all duration-300 ease-in-out `
 				)}
 			>
 				<div className="flex flex-col gap-2 items-center w-full group relative ">
@@ -86,23 +94,24 @@ const SideBar = () => {
 				</div>
 
 				<div className="flex flex-col justify-between h-full items-center mb-10">
-					<div className="flex flex-col gap-10">
+					<div className="flex flex-col gap-10 ">
 						{NAV_ITEMS.map((item) => (
 							<NavLink
 								key={item.href}
 								to={item.href}
 								className={({ isActive }) => (isActive ? 'text-emerald-500' : 'text-white/70')}
 							>
-								<div className="flex gap-2">
+								<div className="flex gap-2 group relative">
 									<item.icon className="hover:text-emerald-500 transition-colors ease-in-out duration-700" />
 									<div
 										className={cn(
-											collapsed ? 'opacity-0  w-0 ' : 'lg:opacity-100 lg:scale-100  lg:w-auto',
+											collapsed ? 'opacity-0  w-0' : 'lg:opacity-100 lg:scale-100  lg:w-auto',
 											` hover:text-emerald-500 transition-all ease-in-out duration-300 w-0 opacity-0`
 										)}
 									>
 										<span>{item.label}</span>
 									</div>
+									<HoverPopoverSideBar collapsed={collapsed} item={item} />
 								</div>
 							</NavLink>
 						))}
@@ -116,7 +125,7 @@ const SideBar = () => {
 								whileTap={{ scale: 0.9, y: 2 }}
 								className="flex cursor-pointer items-center justify-center border-2 border-zinc-800 rounded-2xl hover:border-emerald-500 hover:text-emerald-500 transition-colors ease-in-out duration-300"
 							>
-								<Link to={'/admin'} className="flex items-center p-4">
+								<Link to={'/admin/dashboard'} className="flex items-center p-4">
 									<LayoutDashboardIcon
 										className={collapsed ? 'size-4 mr-2 translate-x-1' : 'size-4 lg:mr-2'}
 									/>
@@ -130,20 +139,7 @@ const SideBar = () => {
 				</div>
 
 				<div className="flex flex-col">
-					<div className={cn(!collapsed && 'lg:flex-row', 'flex flex-col  items-center gap-2')}>
-						<img
-							className={`${data.user ? 'w-12 h-12 border-2 border-gray-400 rounded-full' : 'hidden'} `}
-							src={data.user?.imageUrl}
-						/>
-						<div className="flex flex-col gap-1 items-center">
-							<h1 className={collapsed ? 'hidden' : 'lg:block '}>{data.user?.firstName}</h1>
-							<div className="w-full border  rounded-2xl text-center">
-								<SignedIn>
-									<SignOutButton />
-								</SignedIn>
-							</div>
-						</div>
-					</div>
+					{data.user && <ProfileImage width="12" height="12" imageUrl={data.user?.imageUrl} />}
 				</div>
 
 				<SignedOut>
@@ -160,12 +156,6 @@ const SideBar = () => {
 					>
 						<div className="flex gap-2 ">
 							<RiMusic2Line />
-							<div
-								id="nav-text"
-								className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300"
-							>
-								<span>Главная</span>
-							</div>
 						</div>
 					</NavLink>
 					<NavLink
@@ -174,12 +164,6 @@ const SideBar = () => {
 					>
 						<div className="flex gap-2 ">
 							<RiSearch2Line />
-							<div
-								id="nav-text"
-								className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300"
-							>
-								<span>Search</span>
-							</div>
 						</div>
 					</NavLink>
 					<NavLink
@@ -188,12 +172,6 @@ const SideBar = () => {
 					>
 						<div className="flex gap-2 ">
 							<RiHeart2Line />
-							<div
-								id="nav-text"
-								className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300"
-							>
-								<span>Your Library</span>
-							</div>
 						</div>
 					</NavLink>
 					<NavLink
@@ -201,13 +179,11 @@ const SideBar = () => {
 						className={({ isActive }) => (isActive ? 'text-emerald-500' : 'text-white/70')}
 					>
 						<div className="flex gap-2 ">
-							<RiUser6Line />
-							<div
-								id="nav-text"
-								className="hidden lg:block hover:text-white transition-colors ease-in-out duration-300"
-							>
-								<span>Account</span>
-							</div>
+							{!data.isSignedIn ? (
+								<RiUser3Line />
+							) : (
+								<ProfileImage height="8" width="8" imageUrl={data.user?.imageUrl} />
+							)}
 						</div>
 					</NavLink>
 				</div>

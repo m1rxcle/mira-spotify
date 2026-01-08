@@ -1,7 +1,10 @@
+import { useUser } from '@clerk/clerk-react'
+
 export const StatsPage = () => {
+	const { user } = useUser()
 	return (
-		<div className="h-screen flex md:flex-row flex-col-reverse">
-			<h1>Stats</h1>
+		<div className="px-6 py-6">
+			<h1>Welcome back, {user?.firstName}</h1>
 		</div>
 	)
 }

@@ -6,15 +6,29 @@ import { useEffect } from 'react'
 import { NotFoundFeatures } from '@/shared/components/not-found/not-found-features'
 import FeaturesSongsSkeleton from '@/shared/components/skeletons/features-songs-skeleton'
 import { Footer } from '@/shared/components/user/footer'
+import { UnauthorizedUser } from '@/shared/components/user/profile/unauthorized-user'
 import RenderSongs from '@/shared/components/user/songs/render-songs'
-import { usePlayerStore } from '@/shared/store/use-player-store'
-import { useUserStore } from '@/shared/store/use-user-store'
+import {
+	usePlayerCurrentSong,
+	usePlayerIsPlaying,
+	usePlayerPlayAlbum,
+	usePlayerTogglePlay,
+} from '@/shared/store/use-player-store'
+import { useGetSongsHistory, useHistory, useToken } from '@/shared/store/use-user-store'
 
 export const HistoryPage = () => {
-	const { token, history, getSongsHistory } = useUserStore()
-	const { currentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore()
-
 	const { user } = useUser()
+
+	if (!user) return <UnauthorizedUser />
+
+	const token = useToken()
+	const history = useHistory()
+	const currentSong = usePlayerCurrentSong()
+	const isPlaying = usePlayerIsPlaying()
+
+	const getSongsHistory = useGetSongsHistory()
+	const togglePlay = usePlayerTogglePlay()
+	const playAlbum = usePlayerPlayAlbum()
 
 	const handlePlayAlbumButton = () => {
 		if (!history) return

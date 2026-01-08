@@ -1,11 +1,11 @@
 import { useAuth } from '@clerk/clerk-react'
 import { useEffect } from 'react'
 
-import { useUserStore } from '@/shared/store/use-user-store'
+import { useSetToken } from '@/shared/store/use-user-store'
 
 export const useInitUseR = () => {
 	const { isLoaded, isSignedIn, getToken } = useAuth()
-	const { setToken } = useUserStore()
+	const setToken = useSetToken()
 
 	useEffect(() => {
 		if (!isLoaded || !isSignedIn) return

@@ -7,23 +7,40 @@ import HomeCircleBackground from '@/shared/components/user/home/home-circle-back
 import FeaturesSongsAndHistorySection from '@/shared/components/user/songs/features-songs-and-history-section'
 import MadeForYouSongsSection from '@/shared/components/user/songs/made-for-you-songs-sections'
 import TrendingSongsSection from '@/shared/components/user/songs/trending-songs-section'
-import { useMusicStore } from '@/shared/store/use-music-store'
-import { usePlayerStore } from '@/shared/store/use-player-store'
-import { useUserStore } from '@/shared/store/use-user-store'
+import {
+	useAlbums,
+	useIsLoadingAlbums,
+	useMadeForYouSongs,
+	useSetFetchAlbums,
+	useSetFetchMadeForYouSongs,
+	useSetFetchTrendingSongs,
+	useTrendingSongs,
+} from '@/shared/store/use-music-store'
+import { usePlayerIsPlaying, usePlayerTogglePlay } from '@/shared/store/use-player-store'
+import {
+	useGetFeaturedAlbums,
+	useGetFeaturedSongs,
+	useGetSongsHistory,
+	useToken,
+} from '@/shared/store/use-user-store'
 
 const HomePage = () => {
-	const {
-		trendingSongs,
-		madeForYouSongs,
-		isLoading,
-		albums,
-		setFetchTrendingSongs,
-		setFetchMadeForYouSongs,
+	const trendingSongs = useTrendingSongs()
+	const madeForYouSongs = useMadeForYouSongs()
+	const albums = useAlbums()
+	const isLoadingAlbums = useIsLoadingAlbums()
+	const isLoadingMadeForYou = useIsLoadingAlbums()
+	const isLoadingTrendingSongs = useIsLoadingAlbums()
+	const isPlaying = usePlayerIsPlaying()
+	const token = useToken()
 
-		setFetchAlbums,
-	} = useMusicStore()
-	const { isPlaying, togglePlay } = usePlayerStore()
-	const { token, getFeaturedSongs, getSongsHistory, getFeaturedAlbums } = useUserStore()
+	const setFetchAlbums = useSetFetchAlbums()
+	const setFetchTrendingSongs = useSetFetchTrendingSongs()
+	const setFetchMadeForYouSongs = useSetFetchMadeForYouSongs()
+	const togglePlay = usePlayerTogglePlay()
+	const getFeaturedSongs = useGetFeaturedSongs()
+	const getSongsHistory = useGetSongsHistory()
+	const getFeaturedAlbums = useGetFeaturedAlbums()
 
 	const handlePlayMusic = () => {
 		// Logic to play music
@@ -65,11 +82,11 @@ const HomePage = () => {
 			<div className="flex flex-col gap-10 mb-20">
 				<FeaturesSongsAndHistorySection />
 				<h2 className="text-4xl font-bold ">New Albums</h2>
-				<AlbumsSection albums={albums} isLoading={isLoading} />
+				<AlbumsSection albums={albums} isLoading={isLoadingAlbums} />
 				<h2 className="text-4xl font-bold ">Trends</h2>
-				<TrendingSongsSection trendingSongs={trendingSongs} isLoading={isLoading} />
+				<TrendingSongsSection trendingSongs={trendingSongs} isLoading={isLoadingTrendingSongs} />
 				<h2 className="text-4xl font-bold ">Made For you</h2>
-				<MadeForYouSongsSection madeForYouSongs={madeForYouSongs} isLoading={isLoading} />
+				<MadeForYouSongsSection madeForYouSongs={madeForYouSongs} isLoading={isLoadingMadeForYou} />
 			</div>
 			<Footer />
 		</section>

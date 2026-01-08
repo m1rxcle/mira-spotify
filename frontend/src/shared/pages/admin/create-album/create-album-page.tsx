@@ -5,5 +5,9 @@ interface Props {
 }
 
 export const CreateAlbumPage: React.FC<Props> = ({ className }) => {
-	return <div className={className}></div>
+	return (
+		<div className={className}>
+			<h1>1111111111111111111111111111111</h1>
+		</div>
+	)
 }

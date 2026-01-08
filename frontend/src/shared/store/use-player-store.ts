@@ -6,27 +6,27 @@ import type { Song } from '@/types'
 
 type PlayerStore = {
 	currentSong: Song | null
-
 	isPlaying: boolean
 	hasReportedPlay: boolean
 	duration: number
-
 	queue: Song[]
-
 	currentIndex: number
-
 	timeLeft: number
-	// Меняем цвет плеера
 	changeColors: string
-
 	volume: number[]
+	currentTime: number[]
+	progress: number[]
+	seekTime: number | null
+	isSeeking: boolean
 
+	setHasReportedPlay: (hasReportedPlay: boolean) => void
+	setSeekTime: (time: number | null) => void
+	setChangeProgress: (progress: number[]) => void
+	setIsSeeking: (isSeeking: boolean) => void
+	setChangeCurrentTime: (time: number[]) => void
 	setDuration: (duration: number) => void
-
 	setChangeVolume: (volume: number[]) => void
-
 	setTimeLeft: (time: number) => void
-
 	initializeQueue: (songs: Song[]) => void
 	playAlbum: (songs: Song[], startIndex?: number) => void
 	handleSetCurrentSong: (song: Song) => void
@@ -37,6 +37,10 @@ type PlayerStore = {
 }
 
 export const usePlayerStore = create<PlayerStore>()((set, get) => ({
+	progress: [0],
+	seekTime: null,
+	isSeeking: false,
+	currentTime: [0],
 	volume: [0.5],
 	changeColors: COLORS[0],
 	timeLeft: 0,
@@ -46,6 +50,26 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 	hasReportedPlay: false,
 	duration: 0,
 	queue: [],
+
+	setHasReportedPlay: (hasReportedPlay) => {
+		set({ hasReportedPlay: hasReportedPlay })
+	},
+
+	setSeekTime: (time) => {
+		set({ seekTime: time })
+	},
+
+	setChangeProgress: (progress: number[]) => {
+		set({ progress: progress })
+	},
+
+	setIsSeeking: (isSeeking: boolean) => {
+		set({ isSeeking: isSeeking })
+	},
+
+	setChangeCurrentTime: (time: number[]) => {
+		set({ currentTime: time })
+	},
 
 	setChangeVolume: (volume: number[]) => {
 		set({ volume: volume })
@@ -127,3 +151,34 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 		}
 	},
 }))
+
+export const usePlayerCurrentSong = () => usePlayerStore((state) => state.currentSong)
+export const usePlayerProgress = () => usePlayerStore((state) => state.progress)
+export const usePlayerVolume = () => usePlayerStore((state) => state.volume)
+export const usePlayerSeekTime = () => usePlayerStore((state) => state.seekTime)
+export const usePlayerIsPlaying = () => usePlayerStore((state) => state.isPlaying)
+export const usePlayerIsSeeking = () => usePlayerStore((state) => state.isSeeking)
+export const usePlayerCurrentTime = () => usePlayerStore((state) => state.currentTime)
+export const usePlayerDuration = () => usePlayerStore((state) => state.duration)
+export const usePlayerChangeColors = () => usePlayerStore((state) => state.changeColors)
+export const usePlayerTimeLeft = () => usePlayerStore((state) => state.timeLeft)
+export const usePlayerCurrentIndex = () => usePlayerStore((state) => state.currentIndex)
+export const usePlayerQueue = () => usePlayerStore((state) => state.queue)
+export const usePlayerHasReportedPlay = () => usePlayerStore((state) => state.hasReportedPlay)
+
+//setters
+export const usePlayerSetHasReportedPlay = () => usePlayerStore((state) => state.setHasReportedPlay)
+export const usePlayerSetSeekTime = () => usePlayerStore((state) => state.setSeekTime)
+export const usePlayerSetIsSeeking = () => usePlayerStore((state) => state.setIsSeeking)
+export const usePlayerChangeProgress = () => usePlayerStore((state) => state.setChangeProgress)
+export const usePlayerChangeVolume = () => usePlayerStore((state) => state.setChangeVolume)
+export const usePlayerSetDuration = () => usePlayerStore((state) => state.setDuration)
+export const usePlayerSetTimeLeft = () => usePlayerStore((state) => state.setTimeLeft)
+export const usePlayerInitializeQueue = () => usePlayerStore((state) => state.initializeQueue)
+export const usePlayerPlayAlbum = () => usePlayerStore((state) => state.playAlbum)
+export const usePlayerHandleSetCurrentSong = () =>
+	usePlayerStore((state) => state.handleSetCurrentSong)
+export const usePlayerSetCurrentSong = () => usePlayerStore((state) => state.setCurrentSong)
+export const usePlayerTogglePlay = () => usePlayerStore((state) => state.togglePlay)
+export const usePlayerPlayNextSong = () => usePlayerStore((state) => state.playNextSong)
+export const usePlayerPlayPreviousSong = () => usePlayerStore((state) => state.playPreviousSong)
