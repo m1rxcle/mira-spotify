@@ -1,20 +1,21 @@
-import { useAuth } from '@clerk/clerk-react'
 import { useEffect } from 'react'
 
-import { useSetToken } from '@/shared/store/use-user-store'
+import { useAccessToken, useAuthStore } from '../store/use-auth-store'
+import { useUserStore } from '../store/use-user-store'
 
-export const useInitUseR = () => {
-	const { isLoaded, isSignedIn, getToken } = useAuth()
-	const setToken = useSetToken()
+export const useInitUser = () => {
+	const accessToken = useAccessToken()
+
+	console.log('refreshing access token', accessToken)
 
 	useEffect(() => {
-		if (!isLoaded || !isSignedIn) return
-
-		const init = async () => {
-			const token = await getToken()
-			setToken(token)
+		const fetchUser = async () => {
+			const success = await useAuthStore.getState().refreshAccessToken()
+			if (success) {
+				await useUserStore.getState().setFetchUser()
+			}
 		}
 
-		init()
-	}, [isLoaded, isSignedIn, getToken, setToken])
+		fetchUser()
+	}, [])
 }

@@ -7,10 +7,10 @@ import AudioPlayer from '@/shared/components/user/audio-player'
 import { DashBoardButton } from '@/shared/components/user/dashboard-button'
 import MusicPlayer from '@/shared/components/user/music-player/music-player'
 import SideBar from '@/shared/components/user/side-bar/side-bar'
-import { useAdminStore } from '@/shared/store/use-admin-store'
+import { useAdmin } from '@/shared/store/use-admin-store'
 
 export const UserLayout = () => {
-	const { isAdmin } = useAdminStore()
+	const isAdmin = useAdmin()
 	return (
 		<div className="h-screen flex md:flex-row flex-col-reverse">
 			<SideBar />

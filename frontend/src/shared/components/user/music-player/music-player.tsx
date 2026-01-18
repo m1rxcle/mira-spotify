@@ -18,22 +18,22 @@ import {
 	usePlayerCurrentSong,
 	usePlayerHandleSetCurrentSong,
 } from '@/shared/store/use-player-store'
-import { useGetSongsHistory, useHistory, useToken } from '@/shared/store/use-user-store'
+import { useGetSongsHistory, useHistory, useUser } from '@/shared/store/use-user-store'
 
 const MusicPlayer = () => {
 	const history = useHistory()
-	const token = useToken()
 	const isLoadingAlbums = useIsLoadingAlbums()
 	const currentSong = usePlayerCurrentSong()
 	const changeColors = usePlayerChangeColors()
+	const user = useUser()
 
 	const getSongsHistory = useGetSongsHistory()
 	const handleSetCurrentSong = usePlayerHandleSetCurrentSong()
 
 	useEffect(() => {
-		if (!token) return
+		if (!user) return
 
-		if (history.length === 0) {
+		if (history && history.length === 0) {
 			getSongsHistory()
 			return
 		}
@@ -41,7 +41,7 @@ const MusicPlayer = () => {
 		if (!currentSong && history.length > 0) {
 			handleSetCurrentSong(history[0])
 		}
-	}, [token, history, currentSong, getSongsHistory, handleSetCurrentSong])
+	}, [user, history, currentSong, getSongsHistory, handleSetCurrentSong])
 
 	if (isLoadingAlbums || !currentSong) {
 		return <MusicPlayerSkeleton />
@@ -61,7 +61,7 @@ const MusicPlayer = () => {
 				changeColors === 'pink' && 'bg-pink-500/50',
 				changeColors === 'teal' && 'bg-teal-500/50',
 				changeColors === 'amber' && 'bg-amber-500/50',
-				'md:rounded-2xl rounded-lg md:h-22 h-16  relative group'
+				'md:rounded-2xl rounded-lg md:h-22 h-16  relative group cursor-pointer'
 			)}
 		>
 			<div className="absolute left-0 -top-3  w-full -z-10 h-full bg-transparent rounded-full overflow-hidden hidden md:block">
@@ -69,7 +69,7 @@ const MusicPlayer = () => {
 			</div>
 
 			<div className="hidden md:flex justify-between items-center  pl-2 pr-6 py-2 md:py-2.5 text-white/50  relative z-20">
-				<PlayerToggleFeaturesMessage currentSong={currentSong} />
+				<PlayerToggleFeaturesMessage />
 				<PlayerInfo currentSong={currentSong} />
 				<PlayerControls currentSong={currentSong} />
 				<PlayerProgress currentSong={currentSong} />
@@ -79,7 +79,7 @@ const MusicPlayer = () => {
 			{/* mobile */}
 
 			<div className="relative flex justify-between items-center px-2 py-2 md:hidden z-50 ">
-				<PlayerToggleFeaturesMessage currentSong={currentSong} />
+				<PlayerToggleFeaturesMessage />
 				<MobilePlayerInfo currentSong={currentSong} />
 				<MobilePlayerControls currentSong={currentSong} />
 				<MobilePlayerProgress currentSong={currentSong} />

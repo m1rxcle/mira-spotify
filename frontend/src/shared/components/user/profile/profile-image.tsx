@@ -1,17 +1,19 @@
+import { User2 } from 'lucide-react'
 import React from 'react'
 
 interface Props {
-	height?: string
-	width?: string
+	size?: number
 	imageUrl?: string
 }
 
-export const ProfileImage: React.FC<Props> = ({ width, height, imageUrl }) => {
+export const ProfileImage: React.FC<Props> = ({ size, imageUrl }) => {
 	return (
-		<div
-			className={`w-${width} h-${height} rounded-full  p-0.5 bg-linear-to-r from-[#ff3f3f] to-[#4262f0] border border-black `}
-		>
-			<img src={imageUrl} className="rounded-full border border-black " />
+		<div className="rounded-full p-1 bg-linear-to-r from-[#ff3f3f] to-[#4262f0]">
+			{imageUrl ? (
+				<img src={imageUrl} alt="profile" className="w-full h-full rounded-full object-cover" />
+			) : (
+				<User2 className="text-center mx-auto bg-gray-300  text-black rounded-full" size={size} />
+			)}
 		</div>
 	)
 }

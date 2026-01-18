@@ -3,10 +3,10 @@ import { AppWindow } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { useAdminStore } from '@/shared/store/use-admin-store'
+import { useAdmin } from '@/shared/store/use-admin-store'
 
 export const BackToAppButton: React.FC = () => {
-	const { isAdmin } = useAdminStore()
+	const isAdmin = useAdmin()
 	return (
 		<div className="flex flex-col gap-4 items-center justify-center ">
 			{isAdmin && (

@@ -1,41 +1,50 @@
-import { SignedIn, SignOutButton, useUser } from '@clerk/clerk-react'
 import { motion } from 'framer-motion'
 import { LogOut } from 'lucide-react'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { Card, CardContent } from '@/shared/components/ui/card'
 import { ProfileImage } from '@/shared/components/user/profile/profile-image'
 import { UnauthorizedUser } from '@/shared/components/user/profile/unauthorized-user'
 import { cn } from '@/shared/lib/utils'
+import { useLogout } from '@/shared/store/use-auth-store'
+import { useUser } from '@/shared/store/use-user-store'
 
 interface Props {
 	className?: string
 }
 
 export const ProfilePage: React.FC<Props> = ({ className }) => {
-	const { user } = useUser()
+	const user = useUser()
+	const logout = useLogout()
+	const router = useNavigate()
 	if (!user) return <UnauthorizedUser />
+
+	const handleLogOut = async () => {
+		await logout()
+		router('/auth/login')
+	}
 
 	return (
 		<div className={cn('relative h-screen w-full', className)}>
 			<div className="w-full h-full">
 				<div className="flex flex-col justify-center items-center pt-10 gap-10 px-4">
 					<div className="flex flex-col  justify-center items-center">
-						<ProfileImage height="30" width="30" imageUrl={user.imageUrl} />
-						<h1 className="text-xl font-semibold mb-5">
-							{user?.firstName} {user?.lastName}
-						</h1>
+						<ProfileImage size={100} imageUrl={user.imageUrl || ''} />
+						<h1 className="text-xl font-semibold mb-5">{user.fullName}</h1>
 						<motion.div
 							transition={{ type: 'spring', damping: 15, stiffness: 300 }}
 							whileHover={{ scale: 1.05, y: -2 }}
 							whileTap={{ scale: 0.9, y: 2 }}
 							className="flex cursor-pointer items-center justify-center border-2 border-zinc-800 rounded-2xl hover:border-red-500/50 hover:bg-red-500/50 transition-colors ease-in-out duration-300"
 						>
-							<div className="flex gap-2 items-center px-4 py-3 cursor-pointer">
+							<div
+								onClick={() => handleLogOut()}
+								className="flex gap-2 items-center px-4 py-3 cursor-pointer"
+							>
 								<LogOut className={'size-4 lg:mr-2'} />
-								<SignedIn>
-									<SignOutButton />
-								</SignedIn>
+
+								<span className="font-semibold">Log out</span>
 							</div>
 						</motion.div>
 					</div>
@@ -47,11 +56,7 @@ export const ProfilePage: React.FC<Props> = ({ className }) => {
 									Your name: <span className="font-bold">{user?.fullName || '-'}</span>
 								</p>
 								<p className="text-lg font-semibold">
-									Email: <span className="font-bold">{user?.emailAddresses[0].emailAddress}</span>
-								</p>
-								<p className="text-lg font-semibold">
-									Phone:{' '}
-									<span className="font-bold">{user?.phoneNumbers[0]?.phoneNumber || '-'}</span>
+									Email: <span className="font-bold">{user.email}</span>
 								</p>
 							</div>
 						</CardContent>

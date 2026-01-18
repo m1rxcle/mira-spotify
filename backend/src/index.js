@@ -2,10 +2,10 @@ import express from "express"
 import dotenv from "dotenv"
 
 import { connectDB } from "./lib/db.js"
-import { clerkMiddleware } from "@clerk/express"
 import fileUpload from "express-fileupload"
 import path from "path"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 
 import userRoutes from "./routes/user.route.js"
 import authRoutes from "./routes/auth.route.js"
@@ -21,6 +21,8 @@ const app = express()
 const __dirname = path.resolve()
 const port = process.env.PORT
 
+app.use(cookieParser())
+
 app.use(
 	cors({
 		origin: "http://localhost:3000",
@@ -29,7 +31,7 @@ app.use(
 )
 
 app.use(express.json()) // to parse req.body as JSON
-app.use(clerkMiddleware()) // this will add req.auth to check authentication
+/* app.use(clerkMiddleware()) // this will add req.auth to check authentication */
 app.use(
 	fileUpload({
 		useTempFiles: true,

@@ -19,7 +19,7 @@ import {
 	useFeaturedAlbums,
 	useGetFeaturedAlbums,
 	useToggleFeaturedAlbums,
-	useToken,
+	useUser,
 } from '@/shared/store/use-user-store'
 
 const AlbumPage = () => {
@@ -30,8 +30,8 @@ const AlbumPage = () => {
 	const isLoadingCurrentAlbum = useIsLoadingCurrentAlbum()
 	const currentSong = usePlayerCurrentSong()
 	const isPlaying = usePlayerIsPlaying()
-	const token = useToken()
 	const featuredAlbums = useFeaturedAlbums()
+	const user = useUser()
 	//setters from store
 	const setFetchAlbumById = useSetFetchAlbumById()
 	const togglePlay = usePlayerTogglePlay()
@@ -44,9 +44,9 @@ const AlbumPage = () => {
 	}, [setFetchAlbumById, albumId])
 
 	useEffect(() => {
-		if (!token) return
+		if (!user) return
 		getFeaturedAlbums()
-	}, [getFeaturedAlbums, token])
+	}, [getFeaturedAlbums, user])
 	const handlePlayAlbumButton = () => {
 		if (!currentAlbum) return
 		const isCurrentAlbumPlaying = currentAlbum?.songs.some((song) => song._id === currentSong?._id)
@@ -61,8 +61,6 @@ const AlbumPage = () => {
 	const isFeaturedAlbum = featuredAlbums.some(
 		(featuredAlbum) => featuredAlbum._id.toString() === currentAlbum?._id
 	)
-
-	console.log('FeaturedAlbums', featuredAlbums)
 
 	return (
 		<div className="h-full w-full ">

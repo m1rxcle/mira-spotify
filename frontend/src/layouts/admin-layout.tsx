@@ -3,10 +3,10 @@ import { Navigate, Outlet } from 'react-router-dom'
 import AdminSideBar from '@/shared/components/admin/side-bar/admin-side-bar'
 import { BackToAppButton } from '@/shared/components/admin/side-bar/back-to-app-button'
 import { ScrollArea } from '@/shared/components/ui/scroll-area'
-import { useAdminStore } from '@/shared/store/use-admin-store'
+import { useAdmin } from '@/shared/store/use-admin-store'
 
 export const AdminLayout = () => {
-	const { isAdmin } = useAdminStore()
+	const isAdmin = useAdmin()
 
 	if (!isAdmin) return <Navigate to="*" />
 

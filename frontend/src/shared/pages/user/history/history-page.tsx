@@ -1,4 +1,3 @@
-import { useUser } from '@clerk/clerk-react'
 import { RiPauseMiniFill, RiPlayMiniFill } from '@remixicon/react'
 import { HistoryIcon } from 'lucide-react'
 import { useEffect } from 'react'
@@ -14,14 +13,13 @@ import {
 	usePlayerPlayAlbum,
 	usePlayerTogglePlay,
 } from '@/shared/store/use-player-store'
-import { useGetSongsHistory, useHistory, useToken } from '@/shared/store/use-user-store'
+import { useGetSongsHistory, useHistory, useUser } from '@/shared/store/use-user-store'
 
 export const HistoryPage = () => {
-	const { user } = useUser()
+	const user = useUser()
 
 	if (!user) return <UnauthorizedUser />
 
-	const token = useToken()
 	const history = useHistory()
 	const currentSong = usePlayerCurrentSong()
 	const isPlaying = usePlayerIsPlaying()
@@ -40,11 +38,11 @@ export const HistoryPage = () => {
 	}
 
 	useEffect(() => {
-		if (!token) return
+		if (!user) return
 		getSongsHistory()
-	}, [getSongsHistory, token])
+	}, [getSongsHistory, user])
 
-	if (!history || !token) return <FeaturesSongsSkeleton />
+	if (!history) return <FeaturesSongsSkeleton />
 
 	if (history.length === 0) {
 		return <NotFoundFeatures />

@@ -131,6 +131,13 @@ const songs = [
 		audioUrl: "/songs/18.mp3",
 		duration: 29, // 0:29
 	},
+	{
+		title: "Листья Пуэра",
+		artist: "Баста",
+		imageUrl: "/cover-images/basta.jpg",
+		audioUrl: "/songs/basta.mp3",
+		duration: 240,
+	},
 ]
 
 const seedSongs = async () => {

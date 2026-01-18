@@ -1,8 +1,7 @@
-import { SignedOut } from '@clerk/clerk-react'
 import { UserRoundX } from 'lucide-react'
 import React from 'react'
 
-import SingInOAuthButtons from '../sign-in-OAuth-buttons'
+import SingInOAuthButtons from '../sign-in-buttons'
 
 import { cn } from '@/shared/lib/utils'
 
@@ -20,9 +19,7 @@ export const UnauthorizedUser: React.FC<Props> = ({ className }) => {
 				<p className="text-gray-500 mb-15">Please sign in or sign up to continue</p>
 				<UserRoundX size={100} className="mb-10 text-emerald-500" />
 				<div>
-					<SignedOut>
-						<SingInOAuthButtons />
-					</SignedOut>
+					<SingInOAuthButtons />
 				</div>
 			</div>
 		</div>

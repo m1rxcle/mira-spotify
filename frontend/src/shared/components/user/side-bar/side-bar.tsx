@@ -1,4 +1,3 @@
-import { SignedOut, useUser } from '@clerk/clerk-react'
 import {
 	RiHeart2Line,
 	RiMusic2Line,
@@ -10,14 +9,15 @@ import { motion } from 'framer-motion'
 import { LayoutDashboardIcon } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 
-import SingInOAuthButtons from '../sign-in-OAuth-buttons'
 import { HoverPopoverSideBar } from './hover-popover-side-bar'
 import { ProfileImage } from '../profile/profile-image'
+import SingInOAuthButtons from '../sign-in-buttons'
 
 import ChangeSizeSideBar from '@/shared/lib/change-size-sidebar'
 import { cn } from '@/shared/lib/utils'
-import { useAdminStore } from '@/shared/store/use-admin-store'
+import { useAdmin } from '@/shared/store/use-admin-store'
 import { useCollapsed } from '@/shared/store/use-music-store'
+import { useUser } from '@/shared/store/use-user-store'
 
 const NAV_ITEMS = [
 	{
@@ -44,9 +44,8 @@ const NAV_ITEMS = [
 
 const SideBar = () => {
 	const collapsed = useCollapsed()
-	const { isAdmin } = useAdminStore()
-
-	const data = useUser()
+	const isAdmin = useAdmin()
+	const user = useUser()
 
 	return (
 		<>
@@ -139,12 +138,8 @@ const SideBar = () => {
 				</div>
 
 				<div className="flex flex-col">
-					{data.user && <ProfileImage width="12" height="12" imageUrl={data.user?.imageUrl} />}
+					{user ? <ProfileImage size={50} imageUrl={user?.imageUrl} /> : <SingInOAuthButtons />}
 				</div>
-
-				<SignedOut>
-					<SingInOAuthButtons />
-				</SignedOut>
 			</aside>
 
 			{/*  Mobile sidebar */}
@@ -179,11 +174,7 @@ const SideBar = () => {
 						className={({ isActive }) => (isActive ? 'text-emerald-500' : 'text-white/70')}
 					>
 						<div className="flex gap-2 ">
-							{!data.isSignedIn ? (
-								<RiUser3Line />
-							) : (
-								<ProfileImage height="8" width="8" imageUrl={data.user?.imageUrl} />
-							)}
+							{!user ? <RiUser3Line /> : <ProfileImage size={22} imageUrl={user?.imageUrl} />}
 						</div>
 					</NavLink>
 				</div>

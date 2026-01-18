@@ -8,12 +8,16 @@ const userSchema = new mongoose.Schema(
 		},
 		imageUrl: {
 			type: String,
-			required: true,
+			required: false,
 		},
-		clerkId: {
+		email: {
 			type: String,
 			required: true,
 			unique: true,
+		},
+		password: {
+			type: String,
+			required: true,
 		},
 		featuredSongs: [
 			{

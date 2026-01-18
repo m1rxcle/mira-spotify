@@ -127,6 +127,14 @@ const seedDatabase = async () => {
 				plays: Math.floor(Math.random() * 5000),
 				duration: 17, // 0:17
 			},
+			{
+				title: "Листья Пуэра",
+				artist: "Баста",
+				imageUrl: "/cover-images/basta.jpg",
+				audioUrl: "/songs/basta.mp3",
+				plays: Math.floor(Math.random() * 5000),
+				duration: 240,
+			},
 		])
 
 		// Create albums with references to song IDs

@@ -1,4 +1,3 @@
-import { useUser } from '@clerk/clerk-react'
 import { RiPauseMiniFill, RiPlayMiniFill } from '@remixicon/react'
 import { useEffect } from 'react'
 
@@ -21,15 +20,12 @@ import {
 	useGetFeaturedAlbums,
 	useGetFeaturedSongs,
 	useIsLoadingForUserFeaturedSongs,
-	useToken,
+	useUser,
 } from '@/shared/store/use-user-store'
 
 export const FeaturesPage = () => {
-	const { user } = useUser()
+	const user = useUser()
 
-	if (!user) return <UnauthorizedUser />
-
-	const token = useToken()
 	const featuredSongs = useFeaturedSongs()
 	const isLoadingForUserFeatured = useIsLoadingForUserFeaturedSongs()
 	const featuredAlbums = useFeaturedAlbums()
@@ -42,12 +38,14 @@ export const FeaturesPage = () => {
 	const playAlbum = usePlayerPlayAlbum()
 
 	useEffect(() => {
-		if (!token) return
+		if (!user) return
 		getFeaturedSongs()
 		getFeaturedAlbums()
-	}, [getFeaturedSongs, getFeaturedAlbums, token])
+	}, [getFeaturedSongs, getFeaturedAlbums, user])
 
-	if (!featuredSongs || isLoadingForUserFeatured || !token || !featuredAlbums)
+	if (!user) return <UnauthorizedUser />
+
+	if (!featuredSongs || isLoadingForUserFeatured || !user || !featuredAlbums)
 		return <FeaturesSongsSkeleton />
 
 	if (featuredSongs.length === 0) {
@@ -81,7 +79,7 @@ export const FeaturesPage = () => {
 								<h1 className="text-5xl font-extrabold text-center ">Featured Songs</h1>
 							</div>
 							<div className="flex items-center md:items-start md:justify-start justify-center gap-2">
-								<p className="text-gray-400">{user?.fullName}</p>
+								<p className="text-gray-400">{user.fullName}</p>
 							</div>
 							<div className="flex items-center justify-center md:items-start md:justify-start gap-4 ">
 								<div

@@ -21,7 +21,7 @@ import {
 	useGetFeaturedAlbums,
 	useGetFeaturedSongs,
 	useGetSongsHistory,
-	useToken,
+	useUser,
 } from '@/shared/store/use-user-store'
 
 const HomePage = () => {
@@ -32,7 +32,7 @@ const HomePage = () => {
 	const isLoadingMadeForYou = useIsLoadingAlbums()
 	const isLoadingTrendingSongs = useIsLoadingAlbums()
 	const isPlaying = usePlayerIsPlaying()
-	const token = useToken()
+	const user = useUser()
 
 	const setFetchAlbums = useSetFetchAlbums()
 	const setFetchTrendingSongs = useSetFetchTrendingSongs()
@@ -48,11 +48,11 @@ const HomePage = () => {
 	}
 
 	useEffect(() => {
-		if (!token) return
+		if (!user) return
 		getFeaturedSongs()
 		getFeaturedAlbums()
 		getSongsHistory()
-	}, [token, getFeaturedSongs, getFeaturedAlbums, getSongsHistory])
+	}, [user, getFeaturedSongs, getFeaturedAlbums, getSongsHistory])
 
 	useEffect(() => {
 		setFetchTrendingSongs()
@@ -62,8 +62,8 @@ const HomePage = () => {
 	}, [setFetchTrendingSongs, setFetchAlbums, setFetchMadeForYouSongs])
 
 	return (
-		<section className="h-screen w-full px-6">
-			<div className="h-[70%] relative flex justify-start items-center gap-20">
+		<section className="min-h-screen w-full px-6">
+			<div className="h-[70vh] relative flex justify-start items-center gap-20">
 				<div className="flex flex-col items-center justify-between  mx-auto text-center ">
 					<div
 						className="flex justify-center  items-start cursor-pointer hover:scale-110"

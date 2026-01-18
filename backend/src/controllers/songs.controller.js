@@ -1,5 +1,5 @@
 import { Song } from "../models/song.model.js"
-
+import "dotenv/config"
 export const getAllSongs = async (req, res) => {
 	try {
 		const songs = await Song.find().sort({ createdAt: -1 })
@@ -62,5 +62,19 @@ export const getTrendingSongs = async (req, res) => {
 	} catch (error) {
 		console.error("Error fetching trending songs:", error)
 		res.status(500).json({ message: "Server error while fetching trending songs" })
+	}
+}
+
+export const getTextForSongsFromAI = async (req, res) => {
+	try {
+		const { artist, title } = req.params.songId
+		const url = `https://api.lyrics.ovh/v1/${artist}/${title}`
+
+		const response = await fetch(url)
+		const data = await response.json()
+		res.status(200).json(data)
+	} catch (error) {
+		console.log("Error getting text for song", error)
+		res.status(500).json({ message: "Server error while getting text" })
 	}
 }

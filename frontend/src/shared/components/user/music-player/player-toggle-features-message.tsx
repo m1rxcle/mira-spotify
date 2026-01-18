@@ -2,25 +2,32 @@ import React, { useEffect, useState } from 'react'
 
 import { AnimatedMessageForSongs } from './animated-message-for-songs'
 
-import { useMessage } from '@/shared/store/use-user-store'
-import type { Song } from '@/types'
+import { usePlayerCurrentSong } from '@/shared/store/use-player-store'
+import { useClearMessage, useMessage } from '@/shared/store/use-user-store'
 
-const PlayerToggleFeaturesMessageComponent = ({ currentSong }: { currentSong: Song }) => {
+const PlayerToggleFeaturesMessageComponent = () => {
 	const [showMessage, setShowMessage] = useState(false)
 	const message = useMessage()
+	const clearMessage = useClearMessage()
+
+	const currentSong = usePlayerCurrentSong()
 
 	if (!currentSong) return null
 
 	useEffect(() => {
+		console.log('useEffect fired, message:', message)
 		if (!message) return
 
 		setShowMessage(true)
 
 		const timer = setTimeout(() => {
 			setShowMessage(false)
+			clearMessage()
 		}, 3000)
 
-		return () => clearTimeout(timer)
+		return () => {
+			clearTimeout(timer)
+		}
 	}, [message])
 
 	return (

@@ -50,6 +50,7 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 	hasReportedPlay: false,
 	duration: 0,
 	queue: [],
+	textForSong: '',
 
 	setHasReportedPlay: (hasReportedPlay) => {
 		set({ hasReportedPlay: hasReportedPlay })

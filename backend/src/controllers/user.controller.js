@@ -2,10 +2,26 @@ import { Album } from "../models/album.model.js"
 import { Song } from "../models/song.model.js"
 import { User } from "../models/user.model.js"
 
+export const getMe = async (req, res) => {
+	try {
+		const currentUserId = req.user.id
+		if (!currentUserId) return res.status(401).json({ message: "Unauthorized" })
+		const user = await User.findOne({ _id: currentUserId }).select("-password")
+		if (!user) {
+			return res.status(404).json({ message: "No user found" })
+		}
+		res.status(200).json(user)
+	} catch (error) {
+		res.status(500).json({ message: "Server error", error: error.message })
+		console.error("Error fetching user:", error)
+	}
+}
+
 export const getAllUsers = async (req, res) => {
 	try {
-		const currentUserId = req.auth().userId
-		const users = await User.find({ clerkId: { $ne: currentUserId } })
+		const currentUserId = req.user.id
+		if (!currentUserId) return res.status(401).json({ message: "Unauthorized" })
+		const users = await User.find({ _id: { $ne: currentUserId } })
 		if (!users) {
 			return res.status(404).json({ message: "No users found" })
 		}
@@ -18,10 +34,12 @@ export const getAllUsers = async (req, res) => {
 }
 
 export const getUsersFeatures = async (req, res) => {
+	console.log(req.user)
 	try {
-		const currentUserId = req.auth().userId
+		const currentUserId = req.user.id
+		if (!currentUserId) return res.status(401).json({ message: "Unauthorized" })
 
-		const user = await User.findOne({ clerkId: currentUserId }).select("featuredSongs").populate("featuredSongs")
+		const user = await User.findOne({ _id: currentUserId }).select("featuredSongs").populate("featuredSongs")
 
 		if (!user) {
 			return res.status(404).json({ message: "No features found" })
@@ -36,9 +54,10 @@ export const getUsersFeatures = async (req, res) => {
 
 export const getUsersFeaturesAlbums = async (req, res) => {
 	try {
-		const currentUserId = req.auth().userId
+		const currentUserId = req.user.id
+		if (!currentUserId) return res.status(401).json({ message: "Unauthorized" })
 
-		const user = await User.findOne({ clerkId: currentUserId }).select("featuredAlbums").populate("featuredAlbums")
+		const user = await User.findOne({ _id: currentUserId }).select("featuredAlbums").populate("featuredAlbums")
 
 		if (!user) {
 			return res.status(404).json({ message: "No features found" })
@@ -55,9 +74,10 @@ export const toggleFeatureSong = async (req, res) => {
 	try {
 		const { songId } = req.body
 
-		const currentUserId = req.auth().userId
+		const currentUserId = req.user.id
+		if (!currentUserId) return res.status(401).json({ message: "Unauthorized" })
 
-		const user = await User.findOne({ clerkId: currentUserId }).select("featuredSongs").populate("featuredSongs")
+		const user = await User.findOne({ _id: currentUserId }).select("featuredSongs").populate("featuredSongs")
 
 		const song = await Song.findById(songId)
 
@@ -86,9 +106,10 @@ export const toggleFeaturesAlbums = async (req, res) => {
 	try {
 		const { albumId } = req.body
 
-		const currentUserId = req.auth().userId
+		const currentUserId = req.user.id
+		if (!currentUserId) return res.status(401).json({ message: "Unauthorized" })
 
-		const user = await User.findOne({ clerkId: currentUserId }).select("featuredAlbums").populate("featuredAlbums")
+		const user = await User.findOne({ _id: currentUserId }).select("featuredAlbums").populate("featuredAlbums")
 
 		const album = await Album.findById(albumId)
 
@@ -114,9 +135,11 @@ export const toggleFeaturesAlbums = async (req, res) => {
 }
 
 export const getUsersHistory = async (req, res) => {
-	const currentUserId = req.auth().userId
+	const currentUserId = req.user.id
+	if (!currentUserId) return res.status(401).json({ message: "Unauthorized" })
+
 	try {
-		const user = await User.findOne({ clerkId: currentUserId }).select("history").populate("history")
+		const user = await User.findOne({ _id: currentUserId }).select("history").populate("history")
 
 		if (!user) {
 			return res.status(404).json({ message: "No history found" })
@@ -130,12 +153,13 @@ export const getUsersHistory = async (req, res) => {
 }
 
 export const addToHistory = async (req, res) => {
-	const currentUserId = req.auth().userId
+	const currentUserId = req.user.id
+	if (!currentUserId) return res.status(401).json({ message: "Unauthorized" })
 
 	const { songId } = req.body
 
 	try {
-		const user = await User.findOne({ clerkId: currentUserId })
+		const user = await User.findOne({ _id: currentUserId })
 
 		const song = await Song.findById(songId)
 

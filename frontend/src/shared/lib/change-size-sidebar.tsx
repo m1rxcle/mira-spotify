@@ -7,10 +7,16 @@ import {
 	useSetCollapsed,
 } from '../store/use-music-store'
 
+/**
+ *   Function to change arrow on side-bar
+ * @returns void
+ */
+
 const ChangeSizeSideBar = () => {
 	const changeArrow = useChangeArrow()
-	const setChangeArrow = useSetChangeArrow()
 	const collapsed = useCollapsed()
+
+	const setChangeArrow = useSetChangeArrow()
 	const setCollapsed = useSetCollapsed()
 
 	const changeSizeHandler = () => {

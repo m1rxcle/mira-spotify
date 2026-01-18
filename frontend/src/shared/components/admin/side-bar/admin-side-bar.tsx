@@ -1,16 +1,16 @@
-import { SignedIn, SignedOut, SignOutButton, useUser } from '@clerk/clerk-react'
 import { RiMusic2Line, RiUser6Line } from '@remixicon/react'
 import { motion } from 'framer-motion'
 import { AppWindow, DiscAlbum, LayoutDashboard } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 
+import { ProfileImage } from '../../user/profile/profile-image'
 import { HoverPopoverSideBar } from '../../user/side-bar/hover-popover-side-bar'
-import SingInOAuthButtons from '../../user/sign-in-OAuth-buttons'
 
 import ChangeSizeSideBar from '@/shared/lib/change-size-sidebar'
 import { cn } from '@/shared/lib/utils'
 import { useAdminStore } from '@/shared/store/use-admin-store'
 import { useCollapsed } from '@/shared/store/use-music-store'
+import { useUser } from '@/shared/store/use-user-store'
 
 const NAV_ITEMS = [
 	{
@@ -40,7 +40,7 @@ const AdminSideBar = () => {
 
 	const { isAdmin } = useAdminStore()
 
-	const data = useUser()
+	const user = useUser()
 
 	return (
 		<>
@@ -131,26 +131,7 @@ const AdminSideBar = () => {
 					</div>
 				</div>
 
-				<div className="flex flex-col">
-					<div className={cn(!collapsed && 'lg:flex-row', 'flex flex-col  items-center gap-2')}>
-						<img
-							className={`${data.user ? 'w-12 h-12 border-2 border-gray-400 rounded-full' : 'hidden'} `}
-							src={data.user?.imageUrl}
-						/>
-						<div className="flex flex-col gap-1 items-center">
-							<h1 className={collapsed ? 'hidden' : 'lg:block '}>{data.user?.firstName}</h1>
-							<div className="w-full border  rounded-2xl text-center">
-								<SignedIn>
-									<SignOutButton />
-								</SignedIn>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<SignedOut>
-					<SingInOAuthButtons />
-				</SignedOut>
+				<ProfileImage size={50} imageUrl={user?.imageUrl} />
 			</aside>
 
 			{/*  Mobile sidebar */}

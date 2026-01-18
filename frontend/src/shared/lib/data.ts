@@ -1,3 +1,8 @@
+/**
+ *  Constans to change music-player colors
+ *
+ */
+
 export const COLORS = [
 	'green',
 	'red',
